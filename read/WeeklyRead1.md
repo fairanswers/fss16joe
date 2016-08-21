@@ -9,10 +9,10 @@ Cited 58 times.
 
 ## Key Words
  
-i1 Commit:  Change to the code base (CRUD) for a project.  Can be multiple files, but only one user.  The goal of the project is to get more complete data on commits.
-i2 Repo:  Set of software, similar to a project.  A repo will have an owner and one to many contributors.
-i3 Stream:  The set of events that describe what is happening on git hub.  This has more complete user info for each commit than is otherwise available.  Results only provide a rolling window of 300 events, so multiple queries are required.
-i4 Schema:  The description of the objects, attributes, and relationships underlying the github data.  It is undocumented, so providing details is one of the contributions of this paper. entities : users, organizations, teams, commits, issues, repositories, pull requests, issue comments, milestones, and pull request comments
+ii1 Commit:  Change to the code base (CRUD) for a project.  Can be multiple files, but only one user and one comment.  The goal of the project is to get more complete data on commits.
+ii2 Repo:  Set of software, similar to a project.  A repo will have an owner and one to many contributors.
+ii3 Stream:  The set of events that describe what is happening on git hub.  This has more complete user info for each commit than is otherwise available.  Results only provide a rolling window of 300 events, so multiple queries are required.
+ii4 Schema:  The description of the objects, attributes, and relationships underlying the github data.  It is undocumented, so providing details is one of the contributions of this paper. Entities : users, organizations, teams, commits, issues, repositories, pull requests, issue comments, milestones, and pull request comments
 
 ## Notes
 
