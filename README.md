@@ -11,5 +11,7 @@ Slack https://ase16.slack.com/messages/general/
 
 C9.io https://ide.c9.io/jfair/fss16joe
 
-RefWorks  https://refworks.proquest.com/
+Grades http://tiny.cc/ase16give
+
+Python Book http://www.greenteapress.com/thinkpython/html/index.html
 
