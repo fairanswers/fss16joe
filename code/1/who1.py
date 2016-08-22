@@ -11,13 +11,21 @@ def _okHttp():
   
 @utest.ok  
 def _badHttp():
-    "Bad HTTP Request. Need to figure out how to handle errors and declare variables of a certian type so I can see them after the try."
-    conn = httplib.HTTPSConnection("BadSite123123123123.com", 80, timeout=1)
-    conn.request("GET", "/")
-    r1 = conn.getresponse()
-    print " Status %s" % r1.status
-    assert response.getcode() == 404, 'Should have gotten a 404 error.  Instead got %s ' % str(response.getcode() )
-    #     working = true
-    # if(working == false):
-    #     fail("Should have gotten an error")
+    "Bad HTTP Request. Had to figure out how to set r1 to None so I can check it in the original scope."
+    #Here, I want to set httplib.HTTPResponse r1 = null but that's not right
+    r1 = None
+    try:
+      conn = httplib.HTTPSConnection("BadSite123123123123.com", 80, timeout=1)
+      conn.request("GET", "/")
+      print "About to do get"
+      r1 = conn.getresponse()
+      fail("Should have gotten an error")
+    except Exception,e:
+      #Do something
+      print e
+      1==1
+    assert r1 is None
+#      assert r1.getcode() != 200 #throws UnboundLocalError: local variable 'r1' referenced before assignment
+#    print " Status %s" % r1.status #throws UnboundLocalError: local variable 'r1' referenced before assignment
+    
         
