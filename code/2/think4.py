@@ -19,5 +19,4 @@ def polygon(t, length, sides):
 square(bob, 44)
 #polygon(bob, 20, 10)
 
-
 wait_for_user()
