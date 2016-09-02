@@ -1,6 +1,6 @@
 +ASE16Homework Week 2
 
-Adtive Shooter Do's
+Active Shooter Do's
 
 1.  Stay Calm
 
