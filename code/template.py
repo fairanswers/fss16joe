@@ -15,4 +15,16 @@ def kv(d):
     for k in sorted(d.keys())
     if k[0] != "_"]) + ')'
 
-print("sfsg -> %s" % "so far, so good")
+def items(x):
+  if is_instance(x,(list,tuple)):
+    for y in x:
+      for z in items(y):
+        yield z
+  else:
+    yield x
+
+
+if __name__ == '__main__':
+  print("sfsg -> %s" % "so far, so good")
+
+# vim:sw=2 ts=2
