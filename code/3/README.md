@@ -1,9 +1,9 @@
 +ASE16Homework Week 3
 
 Birthday Works
-[logo]:  (./_Birthday.png)
+[logo]:  https://github.com/fairanswers/fss16joe/blob/master/code/3/_Birthday.png?raw=true
 
 Cards work, too
-![logo]: (./_HandDist.png)
+![logo]: https://github.com/fairanswers/fss16joe/blob/master/code/3/_HandDist.png?raw=true
 
 
