@@ -46,7 +46,7 @@ for x in range(sampleCount):
         #print("found one")
         yes += 1
 
-print("Found %s duplicates out of %s attempts.  %s percent" % (str(yes), str(sampleCount) , str(yes/sampleCount * 100) ) )
+print("Found %s duplicates out of %s attempts with %s people.  %s percent" % (str(yes), str(sampleCount) , str(sampleSize), str(yes/sampleCount * 100) ) )
 
 #    print("Same %s = %s" % str(s), str(sample)
 
