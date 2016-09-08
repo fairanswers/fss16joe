@@ -8,6 +8,7 @@ License: GNU GPLv3 http://www.gnu.org/licenses/gpl.html
 """
 
 from Card import *
+import operator
 
 
 class PokerHand(Hand):
@@ -104,7 +105,7 @@ class PokerHand(Hand):
                 #Check each suit
                 for s in range(4):
                     #Get the cards for that suit
-                    suit_hand = get_cards_for_suit(s)
+                    suit_hand = self.get_cards_for_suit(s)
                     #Check for a straight
                     if suit_hand.has_straight():
                         return True
@@ -118,12 +119,62 @@ class PokerHand(Hand):
                 suit_hand.cards.append(c)
         return suit_hand
 
+    # This could be an iterator
+    def classify(self):
+        if(self.has_straightflush() ):
+            self.label = "Straight flush"
+            return
+        if(self.has_fourofakind() ):
+            self.label = "Four of a kind"
+            return
+        if(self.has_fullhouse() ):
+            self.label = "Full house"
+            return
+        if(self.has_flush() ):
+            self.label = "Flush"
+            return
+        if(self.has_straight() ):
+            self.label = "Straight"
+            return
+        if(self.has_threeofakind() ):
+            self.label = "Three of a kind"
+            return
+        if(self.has_twopair() ):
+            self.label = "Two pair"
+            return
+        if(self.has_pair() ):
+            self.label = "One pair"
+            return
+        self.label = "High Card"
+        return
+
+
 
 if __name__ == '__main__':
     # make a deck
-    deck = Deck()
-    deck.shuffle()
+    results = {}
+    random.seed(1)
+    cardsPerHand=5
     
+    handCount = 100000
+    # deal the cards and classify the hands
+    for i in range(handCount):
+        deck = Deck()
+        deck.shuffle()
+        hand = PokerHand()
+        deck.move_cards(hand, cardsPerHand)
+        hand.sort()
+        hand.classify()
+        #print hand
+        #print hand.label
+        #print ''
+        results[hand.label] = results.get(hand.label, 0 ) + 1
+
+    sorted_results = sorted(results.items(), key=operator.itemgetter(1)) # sort dict by value http://stackoverflow.com/questions/613183/sort-a-python-dictionary-by-value
+    for r in sorted_results:
+        print("Hand %s %s/%s \t %02.2f %%" % (r[0].ljust(18), r[1], handCount, float(r[1])/handCount* 100 ) )
+
+if False:
     #Testing
     t = PokerHand()
     t.cards.append( Card(1, 10) );
@@ -151,15 +202,3 @@ if __name__ == '__main__':
     print("Check get_cards_for_suit  2 = "+str(t.get_cards_for_suit(2) ) )
     print("Check get_cards_for_suit  3 = "+str(t.get_cards_for_suit(3) ) )
     sys.exit()
-    # deal the cards and classify the hands
-    for i in range(7):
-        hand = PokerHand()
-        deck.move_cards(hand, 7)
-        hand.sort()
-        print hand
-        #print "Flush="+hand.has_flush()
-        #print "Pair="+str(hand.has_pair() )
-        print "Two Pair="+str(hand.has_twopair() )
-        print ''
-
-
