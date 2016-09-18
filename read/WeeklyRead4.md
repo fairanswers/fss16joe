@@ -1,5 +1,5 @@
-#  Summary An empirical study of the impact of two antipatterns blob and spaghetti code on program comprehension
-For Ase16 Week 3
+#  “Blending conceptual and evolutionary couplings to support change impact analysis in source code"
+For Ase16 Week 4
 
 ## Paper
 
