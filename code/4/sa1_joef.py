@@ -109,7 +109,7 @@ def annealing():
   #say(str(eb))
   #say("asdf")
   #say(emax)
-  say(eb)
+  #say(eb)
 
   while( k<kmax and e > emax ):
     
