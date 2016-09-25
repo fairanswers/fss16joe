@@ -1,6 +1,11 @@
 +ASE16 Homework Workshop Two
 
-Joe's 
+I added a climb_out function that gave machines in the pit a (1-pit_chance) chance to get out if they have any energy.  But each attempt (success or failure) takes half the remaining energy.
+ 
+Also, if two machines are at the same energy, and one is in the pit, they can help the other out of the pit.
+
+Helpouts and climbouts are logged.
+
 
 [Workshop Code](./fsms.ipynb)
 
