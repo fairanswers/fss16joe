@@ -231,6 +231,9 @@ if __name__ == '__main__':
   else:
     seed = int(sys.argv[1])
   print("SEED # " + str(seed))
+  pr = Osyczka2()
+  solution = runMaxWalkSat(1000, 22)
+  print("\nSolution "+str(solution  ))
 
 
 # vim:sw=2 ts=2
