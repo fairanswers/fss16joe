@@ -58,7 +58,7 @@ class Point(O):
   def is_better_than(self, other):
     my_score = sum(self.ovals)
     other_score = sum(other.ovals)
-    if my_score < other_score:
+    if my_score > other_score:
       return True
     else:
       return False
@@ -205,10 +205,10 @@ def runMaxWalkSat(loop_counts = 1000, seed=1):
   loop_count = 0
   while loop_count < loop_counts:
     #Big jump or small jump?
-    if loop_count/loop_counts < random.random():
+    if .5 < random.random():
       next_p = problem.generate_neighbor(cur_p)
-      say("!")
     else:
+      say("!")
       next_p = problem.generate_one()
     problem.calc_objectives(next_p)
     if next_p.is_better_than(cur_p):
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     seed = int(sys.argv[1])
   print("SEED # " + str(seed))
   pr = Osyczka2()
-  solution = runMaxWalkSat(1000, 22)
+  solution = runMaxWalkSat(10000, 22)
   print("\nSolution "+str(solution  ))
 
 
