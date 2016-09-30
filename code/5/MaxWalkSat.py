@@ -58,7 +58,7 @@ class Point(O):
   def is_better_than(self, other):
     my_score = sum(self.ovals)
     other_score = sum(other.ovals)
-    if my_score > other_score:
+    if my_score < other_score:
       return True
     else:
       return False
@@ -173,7 +173,7 @@ class Osyczka2(O):
   def calcf1(self,p):
     """Calculates but does NOT set f1"""
     x=self.fix_index(p.dvals)
-    f1=x[0]
+    #f1=x[0]
     f1= -1 * (25*pow((x[1]-2), 2) )
     f1 = f1 + pow( (x[2] - 2), 2)
     f1 = f1 + pow( (x[3] - 1), 2)*pow( (x[4]-4), 2)
@@ -232,7 +232,7 @@ if __name__ == '__main__':
     seed = int(sys.argv[1])
   print("SEED # " + str(seed))
   pr = Osyczka2()
-  solution = runMaxWalkSat(10000, 22)
+  solution = runMaxWalkSat(1000, 22)
   print("\nSolution "+str(solution  ))
 
 
