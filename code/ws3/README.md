@@ -1,11 +1,4 @@
-# Workshop - Optimizing POM3 using Genetic Algorithm
++ASE16 Homework Workshop Two
+[Workshop Code](./pom3_ga.ipynb)
 
-### Steps to start:
-* Clone this repo.
-* Navigate to the root folder in your terminal.
-* Run
-  ```
-  ipython notebook
-  ```
-* Navigate to [http://localhost:8888/notebooks/ga.ipynb](http://localhost:8888/notebooks/ga.ipynb). This is assuming you have not changed the default port ipython notebook.
-* Complete all the **TODO**s in the code
+![Plot] https://github.com/fairanswers/fss16joe/blob/master/code/ws3/_GA_Plot.png
