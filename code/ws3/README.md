@@ -1,9 +1,11 @@
-+ASE16Homework Workshop 3
+# Workshop - Optimizing POM3 using Genetic Algorithm
 
-GA Output
-
-![GA Plot]: https://raw.githubusercontent.com/fairanswers/fss16joe/master/code/ws3/_GA_Plot.png
-
-[pom3ga] (./pom3_ga.ipynb)
-
-
+### Steps to start:
+* Clone this repo.
+* Navigate to the root folder in your terminal.
+* Run
+  ```
+  ipython notebook
+  ```
+* Navigate to [http://localhost:8888/notebooks/ga.ipynb](http://localhost:8888/notebooks/ga.ipynb). This is assuming you have not changed the default port ipython notebook.
+* Complete all the **TODO**s in the code
