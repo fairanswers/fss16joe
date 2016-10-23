@@ -1,5 +1,6 @@
 #  When and Why Your Code Starts to Smell Bad
 For Ase16 Week 8
+
 Note:  This paper is from 2015, but it builds directly onthe week 0 paper, has the same authors, and I've already done a 2016 paper.
 
 ## Paper
