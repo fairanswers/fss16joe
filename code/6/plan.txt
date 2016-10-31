@@ -1,0 +1,8 @@
+1.  import python code to cover most of the problems.
+2.  Import and create definitions for each problem.
+3.  Import and create optimizers.
+
+Files
+problems.py
+optimizers.py
+main.py
