@@ -12,6 +12,7 @@ if __name__ == '__main__':
     print("Starting with seed 1")
 
   #Copy paste from req.
-  for model in [Schaffer, Osyczka2, Kursawe]:
+  #for model in [Schaffer, Osyczka2, Kursawe]:
+  for model in [Schaffer]:
     for optimizer in [sa, mws]:
       optimizer(model())

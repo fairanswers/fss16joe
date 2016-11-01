@@ -250,11 +250,11 @@ class Schaffer(Problem):
     point.objectives= [tmp]
     return point.objectives
 
-  def neighbor(self, point):
+  def neighbor(self, point, pct_range=.01):
     """ Neighbors are withing 1% of each other on each decision"""
     for i in range(len(self.decisions) ):
       d=self.decisions[i]
-      neighbor_range = (d.high - d.low) * .01
+      neighbor_range = (d.high - d.low) * pct_range
       point.decisions[i] = point.decisions[i] + random.randrange(-1*neighbor_range, neighbor_range)
       self.evaluate(point)
     return point
