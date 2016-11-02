@@ -1,0 +1,9 @@
+1. Get the map created
+2. Create an agent
+3. Make the agent move
+4. Figure out FSM library and how we'll use it.
+Inital agent fsm
+*Get randome number
+if even, move in random direction
+If odd stay
+Check for valid positions, if not, go back.
