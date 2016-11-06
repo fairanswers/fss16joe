@@ -20,7 +20,7 @@ public class State {
 		
 	}
 	public State next() {
-		Collections.shuffle(guards); //Shuffle in place
+		Collections.shuffle(guards, Model.getRandomGenerator()); //Shuffle in place
 		for(Guard g:guards){
 			if(g.isTrue() ){
 				System.out.println("Trans from "+name+" via "+g.getName()+" to "+g.getTo().getName() );
@@ -28,6 +28,7 @@ public class State {
 			}
 		}
 		//If nothing else, stay where we are.
+		System.out.println("Staying at "+name);
 		return this;
 	}
 	

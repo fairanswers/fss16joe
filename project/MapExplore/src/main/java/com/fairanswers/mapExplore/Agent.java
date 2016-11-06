@@ -1,6 +1,8 @@
 package com.fairanswers.mapExplore;
 
-public class Agent {
+import com.fairanswers.mapExplore.fsm.Model;
+
+public class Agent extends Model {
 	String name;
 	Location loc;
 	
@@ -18,7 +20,11 @@ public class Agent {
 
 	public void move() {
 		loc.setX(loc.getX()+1);
-		
+	}
+	
+	@Override
+	public void tick(int tick){
+		move();
 	}
 ////////////
 	public String getName() {
@@ -37,7 +43,6 @@ public class Agent {
 	public void setLoc(int x, int y) {
 		this.loc = new Location(x,y);
 	}
-
 	public String getAscii() {
 		return "A";
 	}

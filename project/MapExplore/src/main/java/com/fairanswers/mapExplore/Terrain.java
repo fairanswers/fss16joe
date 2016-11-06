@@ -12,7 +12,7 @@ public class Terrain {
 		state = new String[wid][len];
 		for(int x=0; x<wid; x++){
 			for(int y=0; y<len; y++){
-				state[x][y] = "1";
+				state[x][y] = ".";
 			}
 		}	
 	}

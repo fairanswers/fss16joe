@@ -8,3 +8,6 @@ Open Questions:
 * 
 FSM in java
 https://github.com/hekailiang/squirrel
+
+Example PSO
+http://unbox.org/open/trunk/472/14/spring/doc/games.md

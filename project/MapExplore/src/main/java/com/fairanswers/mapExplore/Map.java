@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Map {
-
-	int wid;
 	int len;
+	int wid;
 	Terrain terrain;
 	MapState state;
 	ArrayList<Agent> agents = new ArrayList<Agent>();
@@ -23,24 +22,24 @@ public class Map {
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("["+tick+"]"+end);
-		for(int x=0; x<wid; x++){
-			for(int y=0; y<len; y++){
-				//Check if an agent is at this location
-				boolean found = false;
-				for(Agent a:agents){
-					if(a.getLoc().equals(x,y)){
-						sb.append(a.getAscii() );
-						found=true;
-					}
-					
-				}
-				if(!found){
-					sb.append(terrain.get(x,y) );
-				}
+		for(int y=0; y<len; y++){
+			for(int x=0; x<wid; x++){
+							sb.append(getTerrainAt(x, y) );
 			}
 			sb.append(end);
 		}
 		return sb.toString();
+	}
+
+	public String getTerrainAt(int x, int y) {
+		//Check if an agent is at this location
+		for(Agent a:agents){
+			if(a.getLoc().equals(x,y)){
+				return a.getAscii();
+			}
+			
+		}
+		return terrain.get(x,y);
 	}
 	
 	//Represents one time tick
@@ -49,9 +48,8 @@ public class Map {
 		//Shuffle the agents and let them move
 		Collections.shuffle(agents);
 		for(Agent a:agents){
-			a.move();
+			a.tick(tick);
 		}
-		
 		return this.tick;
 		
 	}

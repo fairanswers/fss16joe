@@ -12,6 +12,7 @@ public class ModelTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Model.setRandomSeed(1L);
 	}
 
 	@After
@@ -19,16 +20,42 @@ public class ModelTest {
 	}
 
 	@Test
-	public void test() {
+	public void testSimple() {
 		State one = new State("one", false);
 		State two = new State("two", true);
-		Guard always = new Guard("always", two);
-		
+		Guard always = new Always("always", two);
 		ArrayList<Trans> t = new ArrayList<Trans>();
 		t.add(new Trans(one, always, two) );
 		Model m = new Model(t);
 		m.run();
-		
 	}
 
+	@Test
+	public void testLooping() {
+		State one = new State("one", false);
+		State two = new State("two", true);
+		Guard always = new Always("always", two);
+		Guard maybe = new Maybe("maybe", one);
+		ArrayList<Trans> t = new ArrayList<Trans>();
+		t.add(new Trans(one, always, two) );
+		t.add(new Trans(one, maybe, two) );
+		Model m = new Model(t,6L);			// Seed = 5 
+		m.run();
+	}
+	
+	@Test
+	public void testRandom(){
+		Model.setRandomSeed(1L);
+		for(int i=0; i<500; i++){
+			assertTrue("Checking random", Model.getRandom() < 1.0);
+			assertTrue("Checking randomInt", Model.getRandomInt(11) < 11);
+			Double dub = Model.getRandomDouble(9999.11, 999999.22);
+			assertTrue("Checking randomDouble bottom "+dub, dub > 9999.11);
+			assertTrue("Checking randomDouble top "+dub, dub < 999999.22);
+			int in = Model.getRandomIntRange(11, 111);
+			assertTrue("Checking randomIntRange bottom for int "+in, in >= 11 );
+			assertTrue("Checking randomIntRange bottom for int "+in, in <= 111 );
+		}
+	}
+	
 }

@@ -1,6 +1,6 @@
 package com.fairanswers.mapExplore.fsm;
 
-public class Guard { //aka "Gaurd"
+public abstract class Guard { //aka "Gaurd"
 	String name;
 	State to;
 	
@@ -9,9 +9,7 @@ public class Guard { //aka "Gaurd"
 		this.to = to;
 	}
 
-	public boolean isTrue(){
-		return true;
-	}
+	public abstract boolean isTrue();
 
 	public String getName() {
 		return name;

@@ -20,6 +20,13 @@ public class MapTest {
 	}
 
 	@Test
+	public void testAgentStateDriven() {
+		map.getAgents().add(new Agent("a1", 1, 1) );
+		map.getAgents().add(new Agent("a1", 2, 2) );
+		System.out.println(map);
+	}
+
+	@Test
 	public void testMap() {
 		Map map = new Map(10,4);
 		assertTrue("Checking terrain", map.getTerrain().get(3, 3).equals("1") );
@@ -46,7 +53,7 @@ public class MapTest {
 			map.tick();
 			System.out.println(map);
 		}
-		
+		assertEquals("Checking for agent at 9x1", "A", map.getTerrainAt(9,1) );
 		
 	}
 }
