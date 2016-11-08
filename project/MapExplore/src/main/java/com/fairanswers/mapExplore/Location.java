@@ -8,6 +8,13 @@ public class Location {
 		this.x=x2;
 		this.y=y2;
 	}
+	
+	@Override
+	public String toString() {
+		return "Location [" + x + ", " + y + "]";
+	}
+
+
 	public int getX() {
 		return x;
 	}

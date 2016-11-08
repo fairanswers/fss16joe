@@ -3,11 +3,19 @@ package com.fairanswers.mapExplore;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/* Wrapper for ecosystem including:
+ *  - Terrain for map
+ *  - Agents
+ *  - Functionality for running agents around the map
+ *  
+ *  Origin is (0,0) to (len, wid) in lower left corner.  North (zero degrees) is up. 
+ *
+ */
 public class Map {
+	private static final Object BORDER = "M";
 	int len;
 	int wid;
 	Terrain terrain;
-	MapState state;
 	ArrayList<Agent> agents = new ArrayList<Agent>();
 	private int tick=0;
 	public final String end = System.getProperty("line.separator");
@@ -16,22 +24,35 @@ public class Map {
 		this.wid = wid;
 		this.len = len;
 		terrain = new Terrain(this);
-		state = new MapState(this);
 	}
 	
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("["+tick+"]"+end);
-		for(int y=0; y<len; y++){
+		sb.append(BORDER);
+		for(int x=0; x<wid; x++){
+			sb.append(x%10);
+		}
+		sb.append(BORDER);
+		sb.append(end);
+		for(int y=len-1; y>=0; y--){
+			sb.append(y%10);
 			for(int x=0; x<wid; x++){
-							sb.append(getTerrainAt(x, y) );
+				sb.append(getViewAt(x, y) );
 			}
+			sb.append(y%10);
 			sb.append(end);
 		}
+		sb.append(BORDER);
+		for(int x=0; x<wid; x++){
+			sb.append(x%10);
+		}
+		sb.append(BORDER);
+		sb.append(end);
 		return sb.toString();
 	}
 
-	public String getTerrainAt(int x, int y) {
+	public String getViewAt(int x, int y) {
 		//Check if an agent is at this location
 		for(Agent a:agents){
 			if(a.getLoc().equals(x,y)){
@@ -78,13 +99,7 @@ public class Map {
 		this.terrain = terrain;
 	}
 
-	public MapState getState() {
-		return state;
-	}
 
-	public void setState(MapState state) {
-		this.state = state;
-	}
 
 	public ArrayList<Agent> getAgents() {
 		return agents;
@@ -100,6 +115,14 @@ public class Map {
 
 	public void setTick(int tick) {
 		this.tick = tick;
+	}
+
+	public boolean isValid(int x, int y) {
+		if(x>=0 && x<wid && y>=0 && y<len){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	

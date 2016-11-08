@@ -21,15 +21,15 @@ public class MapTest {
 
 	@Test
 	public void testAgentStateDriven() {
-		map.getAgents().add(new Agent("a1", 1, 1) );
-		map.getAgents().add(new Agent("a1", 2, 2) );
+		map.getAgents().add(new Agent("a1", 1, 1, map) );
+		map.getAgents().add(new Agent("a1", 2, 2, map) );
 		System.out.println(map);
 	}
 
 	@Test
 	public void testMap() {
 		Map map = new Map(10,4);
-		assertTrue("Checking terrain", map.getTerrain().get(3, 3).equals("1") );
+		assertTrue("Checking terrain", map.getTerrain().get(3, 3).equals(Terrain.DEFAULT) );
 	}
 
 	@Test
@@ -38,22 +38,10 @@ public class MapTest {
 	}
 
 	@Test
-	public void testAgentToString() {
-		map.getAgents().add(new Agent("a1", 1, 1) );
-		map.getAgents().add(new Agent("a1", 2, 2) );
-		System.out.println(map);
-	}
-	
-	@Test 
-	public void testAgentMove(){
-		Agent a = new Agent("a1", 1, 1) ;
-		map.getAgents().add(a);
-		System.out.println(map);
-		for(int i=0; i< 8; i++){
-			map.tick();
-			System.out.println(map);
-		}
-		assertEquals("Checking for agent at 9x1", "A", map.getTerrainAt(9,1) );
-		
+	public void testValid(){
+		assertTrue(map.isValid(0, 0));
+		assertFalse(map.isValid(0, map.getLen() ) );
+		assertFalse(map.isValid(map.getWid(), 0));
+		assertFalse(map.isValid(map.getWid(), map.getLen()));
 	}
 }
