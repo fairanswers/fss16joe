@@ -29,12 +29,20 @@ public class Terrain {
 		return detail[x][y];
 	}
 
+	//http://stackoverflow.com/questions/6468730/converting-double-to-integer-in-java
+	public String get(double x, double y){
+		return get((int)x,(int)y);
+	}
+
 	public static Terrain createAgentTerrain(Map map){
 		return new Terrain(map, UNKNOWN);
 	}
 
 	public void setTerrain(int x, int y, String terrainAt) {
 		detail[x][y] = terrainAt;
+	}
+	public void setTerrain(double x, double y, String terrainAt) {
+		setTerrain((int)x, (int)y, terrainAt);
 	}
 
 	public String toString(){

@@ -5,9 +5,9 @@ import com.fairanswers.mapExplore.fsm.Model;
 public class Agent extends Model {
 	String name; //UID
 	Location loc;
-	int speed=1; // distance per tick
-	int dir = 0; //Heading
-	int see = 1; //Visibility
+	double speed=1; // distance per tick
+	double dir = 0; //Heading
+	double see = 1; //Visibility
 	Terrain ter; //Known terrain
 	Map map;
 	
@@ -18,7 +18,7 @@ public class Agent extends Model {
 		this.name = name;
 	}
 	
-	public Agent(String string, int x, int y, Map map) {
+	public Agent(String string, double x, double y, Map map) {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
@@ -26,9 +26,9 @@ public class Agent extends Model {
 		ter.setTerrain(x, y, map.getViewAt(x, y) );
 	}
 	
-	public void move(int dir, int speed) {
-		int xDir = getXTravel(dir);
-		int yDir = getYTravel(dir);
+	public void move(double dir, double speed) {
+		double xDir = getXTravel(dir);
+		double yDir = getYTravel(dir);
 		loc.setX(loc.getX()+xDir);
 		if(!map.isValid(loc.getX(), loc.getY())){
 			loc.setX(loc.getX() - xDir);
@@ -42,25 +42,25 @@ public class Agent extends Model {
 
 	}
 	
-	private int turnRandom(int i) {
+	private double turnRandom(double i) {
 		if(getRandom() < .5)
 			return turnRight(i);
 		else
 			return turnLeft(i);
 	}
 
-	public int turnRight(int i) {
+	public double turnRight(double i) {
 		return (dir+i)%360;
 		
 	}
 
-	public int turnLeft(int i) {
+	public double turnLeft(double i) {
 		return Math.abs(dir-i) %360;
 		
 	}
 
-	private int getXTravel(int dir2) {
-		switch( dir2){
+	private double getXTravel(double dir2) {
+		switch( (int)dir2){
 		case  90: return  1*speed;
 		case 270: return -1*speed;
 		default : return  0;
@@ -68,8 +68,8 @@ public class Agent extends Model {
 			
 	}
 
-	private int getYTravel(int dir2) {
-		switch( dir2){
+	private double getYTravel(double dir2) {
+		switch( (int)dir2){
 		case   0: return  1*speed;
 		case 180: return -1*speed;
 		default : return  0;
@@ -84,9 +84,9 @@ public class Agent extends Model {
 		look(loc.getX(), loc.getY(), map);
 	}
 
-	public void look(int xCenter, int yCenter, Map map) {
-		for(int y=yCenter-see; y<=yCenter+see; y++){
-			for(int x=xCenter-see; x<=xCenter+see; x++){
+	public void look(double xCenter, double yCenter, Map map) {
+		for(double y=yCenter-see; y<=yCenter+see; y++){
+			for(double x=xCenter-see; x<=xCenter+see; x++){
 				if(map.isValid(x,y) ){
 					ter.setTerrain(x, y, map.getTerrain().get(x, y) );
 				}
@@ -94,7 +94,7 @@ public class Agent extends Model {
 		}
 	}
 
-	private int decideDir() {
+	private double decideDir() {
 		//Mostly go forward
 		if(getRandom() < .7){
 			return dir;
@@ -123,34 +123,34 @@ public class Agent extends Model {
 	public void setLoc(Location loc) {
 		this.loc = loc;
 	}
-	public void setLoc(int x, int y) {
+	public void setLoc(double x, double y) {
 		this.loc = new Location(x,y);
 	}
 	public String getAscii() {
 		return Terrain.AGENT;
 	}
 
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 
-	public int getDir() {
+	public double getDir() {
 		return dir;
 	}
 
-	public void setDir(int dir) {
+	public void setDir(double dir) {
 		this.dir = dir;
 	}
 
-	public int getSee() {
+	public double getSee() {
 		return see;
 	}
 
-	public void setSee(int see) {
+	public void setSee(double see) {
 		this.see = see;
 	}
 

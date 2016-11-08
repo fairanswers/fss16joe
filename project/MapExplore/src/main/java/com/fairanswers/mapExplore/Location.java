@@ -2,9 +2,9 @@ package com.fairanswers.mapExplore;
 
 public class Location {
 
-	int x;
-	int y;
-	public Location(int x2, int y2) {
+	double x;
+	double y;
+	public Location(double x2, double y2) {
 		this.x=x2;
 		this.y=y2;
 	}
@@ -15,19 +15,19 @@ public class Location {
 	}
 
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
-	public boolean equals(int x2, int y2) {
+	public boolean equals(double x2, double y2) {
 		if(x2==x && y2 == y){
 			return true;
 		}

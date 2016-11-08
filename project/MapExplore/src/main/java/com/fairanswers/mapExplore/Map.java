@@ -63,6 +63,9 @@ public class Map {
 		return terrain.get(x,y);
 	}
 	
+	public String getViewAt(double x, double y) {
+		return getViewAt((int)x, (int)y);
+	}
 	//Represents one time tick
 	public int tick(){
 		tick++;
@@ -117,6 +120,9 @@ public class Map {
 		this.tick = tick;
 	}
 
+	public boolean isValid(double x, double y) {
+		return isValid((int)x, (int)y);
+	}
 	public boolean isValid(int x, int y) {
 		if(x>=0 && x<wid && y>=0 && y<len){
 			return true;

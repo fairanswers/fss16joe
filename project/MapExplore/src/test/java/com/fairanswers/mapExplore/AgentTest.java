@@ -48,7 +48,7 @@ public class AgentTest {
 			map.tick();
 			System.out.println(map);
 		}
-		assertEquals("Checking for agent at 9x1", Terrain.AGENT, map.getViewAt(9,1) );
+		assertEquals("Checking for agent at 5x2", Terrain.AGENT, map.getViewAt(5,2) );
 	}
 
 	@Test 
