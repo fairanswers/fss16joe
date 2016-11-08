@@ -11,9 +11,15 @@ public class Location {
 	
 	@Override
 	public String toString() {
-		return "Location [" + x + ", " + y + "]";
+		return "Location [" + Map.numFormat.format(x) + ", " + Map.numFormat.format(y) + "]";
 	}
 
+	public boolean equals(double x2, double y2) {
+		if((int)x2-(int)x == 0  && (int)y2-(int)y== 0){
+			return true;
+		}
+		return false;
+	}
 
 	public double getX() {
 		return x;
@@ -26,11 +32,5 @@ public class Location {
 	}
 	public void setY(double y) {
 		this.y = y;
-	}
-	public boolean equals(double x2, double y2) {
-		if(x2==x && y2 == y){
-			return true;
-		}
-		return false;
 	}
 }

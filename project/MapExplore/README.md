@@ -41,10 +41,11 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 Also removed mapState and World classes (for now).
 
 #Phase 3 - Getting Real (numbers)
+Done 11/8
 Currently, map spaces are 1x1, and agent moves 1 space.  All values (x, y, dir) are integers.
-This phase is about changing all of that to floats, 
+This phase is about changing all of that to doubles, 
 
-Research - (I use stoack overflow 3 times a day in my day job, so that's where google takes me.)
+Research - (I use stack overflow 3 times a day in my day job, so that's where google takes me.)
 
 http://stackoverflow.com/questions/611732/what-to-do-with-java-bigdecimal-performance
 http://stackoverflow.com/questions/1378044/how-using-bigdecimal-would-affect-application-performance
@@ -62,12 +63,48 @@ In the javadocs
 https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
  For decimal values, this data type is generally the default choice. 
  
+#Phase 4 - Better Directions
+Change dir from ordinal positions to degrees. Zero is north.  Show a circle.
+Done 11/8
+Example Terrain after circle:
+
+```
+
+Agent [name=a2, loc=Location [.68, .97], speed=1.00, dir=266.40, see=1.00, ter=
+T01234567890123456789012345678901234567890123456789012345678901234567890123456789T
+9............                                                                    9
+8............                                                                    8
+7...      ...                                                                    7
+6...      ...                                                                    6
+5...      ...                                                                    5
+4..       ...                                                                    4
+3..       ...                                                                    3
+2..       ...                                                                    2
+1............                                                                    1
+0............                                                                    0
+T01234567890123456789012345678901234567890123456789012345678901234567890123456789T
+]
+
+```
+
 #Future
 
-Speed variable
-
-Any direction (360 degrees)
-
 Terrain is varied
+```
+Key:
+Space 	Unknown
+.		Paved
+,		Grass
+o		Hill
+X		Wall
+```
+
+Differentiate between Actor and Physical models
+
+- Actor is overall direction
+
+- Physical takes into account terrain 
+
+Speed variable
 
 Spaces on the map are 100x100

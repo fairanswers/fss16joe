@@ -1,5 +1,6 @@
 package com.fairanswers.mapExplore;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,13 +14,14 @@ import java.util.Collections;
  */
 public class Map {
 	private static final Object BORDER = "M";
+	public static final double CLOSE_ENOUGH = .5;
 	int len;
 	int wid;
 	Terrain terrain;
 	ArrayList<Agent> agents = new ArrayList<Agent>();
 	private int tick=0;
 	public final String end = System.getProperty("line.separator");
-	
+	public static final DecimalFormat numFormat = new DecimalFormat("#.00");	
 	public Map(int wid, int len){
 		this.wid = wid;
 		this.len = len;
@@ -29,6 +31,9 @@ public class Map {
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("["+tick+"]"+end);
+		for(Agent a:agents){
+			sb.append(a.toString(true)+end);
+		}
 		sb.append(BORDER);
 		for(int x=0; x<wid; x++){
 			sb.append(x%10);
@@ -121,6 +126,9 @@ public class Map {
 	}
 
 	public boolean isValid(double x, double y) {
+		if(x < 0.0 || y < 0.0){
+			return false;
+		}
 		return isValid((int)x, (int)y);
 	}
 	public boolean isValid(int x, int y) {
