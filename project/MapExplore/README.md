@@ -43,11 +43,15 @@ Also removed mapState and World classes (for now).
 #Phase 3 - Getting Real (numbers)
 Currently, map spaces are 1x1, and agent moves 1 space.  All values (x, y, dir) are integers.
 This phase is about changing all of that to floats, 
+
 Research - (I use stoack overflow 3 times a day in my day job, so that's where google takes me.)
+
 http://stackoverflow.com/questions/611732/what-to-do-with-java-bigdecimal-performance
 http://stackoverflow.com/questions/1378044/how-using-bigdecimal-would-affect-application-performance
 http://stackoverflow.com/questions/3413448/double-vs-bigdecimal
+
 *Best Answer
+
 A BigDecimal is an exact way of representing numbers. A Double has a certain precision. Working with doubles of various magnitudes (say d1=1000.0 and d2=0.001) could result in the 0.001 being dropped alltogether when summing as the difference in magnitude is so large. With BigDecimal this would not happen.
 
 The disadvantage of BigDecimal is that it's slower, and it's a bit more difficult to program algorithms that way (due to + - * and / not being overloaded).
@@ -59,7 +63,11 @@ https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
  For decimal values, this data type is generally the default choice. 
  
 #Future
+
 Speed variable
+
 Any direction (360 degrees)
+
 Terrain is varied
+
 Spaces on the map are 100x100
