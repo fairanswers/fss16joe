@@ -64,8 +64,13 @@ https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
  For decimal values, this data type is generally the default choice. 
  
 #Phase 4 - Better Directions
-Change dir from ordinal positions to degrees. Zero is north.  Show a circle.
 Done 11/8
+
+- Change dir from ordinal positions to degrees. Zero is north.  Show a circle.
+- Agents get dirWiggle (degrees to wander while going straight).
+- Agents get ability to random turn
+
+
 Example Terrain after circle:
 
 ```
@@ -86,6 +91,28 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 ]
 
 ```
+In the interest of science, I ran one with plenty of turns.
+
+- chanceFwd of .6 (only 60% chance of going forward)
+- dirWiggle of 10 degrees - Each forward includes a random +/- 10
+
+```
+
+Agent [name=testAgentBumpAndTurnExciting, loc=Location [38.58, 5.92], dir=220.0324612279289, speed=1.0, see=1.0, dirWiggle=10.0, chanceFwd=0.6, tick=0, ter=
+T01234567890123456789012345678901234567890123456789012345678901234567890123456789T
+9     ......  .........................  ...                                     9
+8     ...... ................................                                    8
+7     ...... ................................                                    7
+6      ......................................                                    6
+5    ......................................                                      5
+4.........................................                                       4
+3.......................................                                         3
+2......................................                                          2
+1....  ...................... .....                                              1
+0....  .............. ....    .....                                              0
+T01234567890123456789012345678901234567890123456789012345678901234567890123456789T
+```
+
 
 #Future
 

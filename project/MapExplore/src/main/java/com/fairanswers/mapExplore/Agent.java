@@ -12,6 +12,7 @@ public class Agent extends Model {
 	Map map;
 	double dirWiggle = 1;
 	private Double chanceFwd = .99;
+	int tick=0;
 
 	public Agent() {
 	}
@@ -42,12 +43,12 @@ public class Agent extends Model {
 		loc.setX(loc.getX() + xDir);
 		if (!map.isValid(loc.getX(), loc.getY())) {
 			loc.setX(loc.getX() - xDir);
-			//setDir(turnRandom(90));
+			setDir(turnRandom(90));
 		}
 		loc.setY(loc.getY() + yDir);
 		if (!map.isValid(loc.getX(), loc.getY())) {
 			loc.setY(loc.getY() - yDir);
-			//setDir(turnRandom(90));
+			setDir(turnRandom(90));
 		}
 
 	}
@@ -60,30 +61,32 @@ public class Agent extends Model {
 	}
 
 	public double turnRight(double i) {
+		System.out.println(" * * * RIGHT TURN");
 		setDir(dir + i );
 		return this.dir;
 
 	}
 
 	public double turnLeft(double i) {
+		System.out.println(" * * * LEFT TURN");
 		setDir( dir - i);
 		return dir;
 
 	}
 
 	public double getXTravel(double dir2, double spd) {
-		double travel = Math.cos(Math.toRadians(dir2)) * spd;
+		double travel = Math.sin(Math.toRadians(dir2)) * spd;
 		return travel;
 	}
 
 	public double getYTravel(double dir2, double spd) {
-		double travel = Math.sin(Math.toRadians(dir2)) * spd;
+		double travel = Math.cos(Math.toRadians(dir2)) * spd;
 		return travel;
 	}
 
 	@Override
 	public void tick(int tick) {
-
+		tick++;
 		move(decideDir(), speed);
 		look(loc.getX(), loc.getY(), map);
 	}
@@ -108,18 +111,18 @@ public class Agent extends Model {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "Agent [name=" + name + ", loc=" + loc + ", speed=" + Map.numFormat.format(speed) + ", dir="
-				+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see) + ", ter=\n" + ter + "\n]";
-	}
-
 	public String toString(boolean brief) {
 		if (!brief)
 			return toString();
 		else
 			return "Agent [name=" + name + ", loc=" + loc + ", speed=" + Map.numFormat.format(speed) + ", dir="
 					+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see);
+	}
+
+	@Override
+	public String toString() {
+		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + dir + ", speed=" + speed + ", see=" + see
+				+ ", dirWiggle=" + dirWiggle + ", chanceFwd=" + chanceFwd + ", tick=" + tick + ", ter=" +  map.end + ter +  map.end + "]";
 	}
 
 	////////////
@@ -204,6 +207,14 @@ public class Agent extends Model {
 
 	public void setChanceFwd(Double chanceFwd) {
 		this.chanceFwd = chanceFwd;
+	}
+
+	public int getTick() {
+		return tick;
+	}
+
+	public void setTick(int tick) {
+		this.tick = tick;
 	}
 
 }

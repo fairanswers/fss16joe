@@ -36,7 +36,8 @@ public class AgentTest {
 
 	@Test
 	public void testLook() {
-		String t = map.getAgents().get(0).getTer().get(0, 1);
+		agent.setName("testLook");
+		String t = agent.getTer().get(0, 1);
 		assertTrue(t.equals(Terrain.UNKNOWN));
 		map.tick();
 		t = map.getAgents().get(0).getTer().get(1, 1);
@@ -51,52 +52,70 @@ public class AgentTest {
 
 	@Test 
 	public void testAgentMove(){
+		agent.setName("testAgentMove");
 		agent.setDir(90.0);
 		System.out.println(map);
 		for(int i=0; i< 8; i++){
 			map.tick();
 			System.out.println(map);
 		}
+		System.out.println(agent);
 //		assertEquals("Checking for agent at 5x2", Terrain.AGENT, map.getViewAt(5,2) );
 	}
 
 	@Test 
-	public void testAgentBumpAndTurn(){
+	public void testAgentBumpAndTurnBoring(){
+		agent.setName("testAgentBumpAndTurnBoring");
 		Agent.setRandomSeed(1L);
 		agent.setDir(90);
 		System.out.println(map);
 		for(int i=0; i< 500; i++){
 			map.tick();
-			System.out.println(agent);
+			System.out.println(map);
 		}
 		System.out.println(agent);
 		//assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(0,1) );
 	}
 	
 	@Test 
+	public void testAgentBumpAndTurnExciting(){
+		map.agents.remove(0);
+		agent = new Agent("testAgentBumpAndTurnExciting", 1, 1, 10, .60, map);
+		map.agents.add(agent);
+		Agent.setRandomSeed(1L);
+		agent.setDir(90);
+		System.out.println(map);
+		for(int i=0; i< 500; i++){
+			map.tick();
+			System.out.println(map);
+		}
+		System.out.println(agent);
+		//assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(0,1) );
+	}
+	@Test 
 	public void testAgentCircle(){
 		Agent.setRandomSeed(1L);
 		agent.setDir(0);
 		//Right
-		for(int i=0; i< 9; i++){
+		for(int i=0; i< 8; i++){
 			map.tick();
 			System.out.println(map);
 		}
 		//Up
 		agent.turnRight(90);
-		for(int i=0; i< 9; i++){
+		for(int i=0; i< 8; i++){
 			map.tick();
 			System.out.println(map);
 		}
 		//left
 		agent.turnRight(90);
-		for(int i=0; i< 9; i++){
+		for(int i=0; i< 8; i++){
 			map.tick();
 			System.out.println(map);
 		}
 		//Down
 		agent.turnRight(90);
-		for(int i=0; i< 9; i++){
+		for(int i=0; i< 8; i++){
 			map.tick();
 			System.out.println(map);
 		}
