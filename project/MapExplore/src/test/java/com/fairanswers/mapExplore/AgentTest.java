@@ -119,8 +119,9 @@ public class AgentTest {
 			map.tick();
 			System.out.println(map);
 		}
+		System.out.println(map);
 		System.out.println(agent);
-		assertEquals("Checking for agent at 0x0", Terrain.AGENT, map.getViewAt(0,0) );
+		assertEquals("Checking for agent at 1x0", Terrain.AGENT, map.getViewAt(1,0) );
 	}
 
 	@Test 
