@@ -15,8 +15,8 @@ import java.util.Collections;
 public class Map {
 	private static final Object BORDER = "M";
 	public static final double CLOSE_ENOUGH = .5;
-	int len;
-	int wid;
+	int wid;  // x dimension
+	int len;  // y dimension
 	Terrain terrain;
 	ArrayList<Agent> agents = new ArrayList<Agent>();
 	private int tick=0;

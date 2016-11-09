@@ -7,6 +7,11 @@ public class Terrain {
 	private static final String TERRAIN_CORNER = "T";
 	public final String end = System.getProperty("line.separator");
 
+	public final static String PAVED   = ".";
+	public final static String GRASS   = ",";
+	public final static String HILL    = "o";
+	public final static String WALL    = "X";
+	
 	int wid;
 	int len;
 	String [][] detail;
@@ -25,6 +30,14 @@ public class Terrain {
 		}	
 	}
 	
+//	public void loadTerrainString(String setup){
+//		for(int x=0; x<wid; x++){
+//			for(int y=0; y<len; y++){
+//				detail[x][y] = new String(setup.charAt(x+y*wid ) );
+//			}
+//		}	
+//	}
+
 	public String get(int x, int y){
 		return detail[x][y];
 	}

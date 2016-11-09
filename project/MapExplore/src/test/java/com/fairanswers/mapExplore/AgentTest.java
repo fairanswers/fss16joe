@@ -133,13 +133,18 @@ public class AgentTest {
 	
 	@Test
 	public void testTravel(){
-		double deg=180.0;
+		double deg= 0.0;
 		double rad = toRadians(deg);
 		double c = cos(rad);
 		double s = sin(rad);
-		double x = agent.getXTravel(180, 10.0);
-		assertTrue(abs(x+10.0) < .01); // Equals is too hard.  Settle for 1%
-		double y = agent.getYTravel(270, 10.0);
-		assertTrue(abs(y+10.0) < .01); // Equals is too hard.  Settle for 1%
+		double x = agent.getXTravel(deg, 10.0);
+		double y = agent.getYTravel(deg, 10.0);
+		assertTrue("Testing for close enough ", abs(x) < .01); // Equals is too hard.  Settle for 1%
+		assertTrue(abs(y)-10.0 < .01); // Equals is too hard.  Settle for 1%
+		deg = 270;
+		x = agent.getXTravel(deg, 10.0);
+		y = agent.getYTravel(deg, 10.0);
+		assertTrue("Testing for close enough ", x+10.0 < .01); // Equals is too hard.  Settle for 1%
+		assertTrue(abs(y) < .01); // Equals is too hard.  Settle for 1%
 	}
 }

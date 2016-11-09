@@ -1,13 +1,27 @@
 # ASE16 Joe's Final Project
 # MapExplore
+This project will use Particle Swarm Optimization to cover a map.  
 
+The decisions will include
+* Map size
+* Number of agents
+* Points of Interest (POI)
 
+Objectives:
+* Percent map coverage (maximize)
+* Time (measured in clock ticks)
 
-Open Questions:
-* How should maps and agents interact?  Does each agent need their own map?
-* 
+Interesting Scenarios
+* Agents communicate recent findings.
+* Defenders take out agents (loss of data)
+* Agents have a set rate of failure.
+* POI are mobile (old data is less reliable)
+* Known POI location vs. unknown POI location.
+* Starting at random points vs the same point.
+* Solar charging - Rain, sunshine.  Affects charge rate, wet terrain slows speed.
+
 FSM in java
-https://github.com/hekailiang/squirrel
+Adapted from python code.  Starts in the Model class.
 
 Example PSO
 http://unbox.org/open/trunk/472/14/spring/doc/games.md
@@ -17,11 +31,11 @@ Done 11/3.
 
 #Phase 2 - Make the agent marginally smarter.
 Done 11/7
-- Agent remembers where it has been. 
-- Make it move, look, and check boundaries.  
-- Decides direction (always 90) and shows movement.
-- Maps pretty-print with border for easier counting.
-- Terrain is like a map, but each agent remembers where its been.
+* Agent remembers where it has been. 
+* Make it move, look, and check boundaries.  
+* Decides direction (always 90) and shows movement.
+* Maps pretty-print with border for easier counting.
+* Terrain is like a map, but each agent remembers where its been.
 
 Sample Finished Terrain (Starts out blank. Dots are where agent 'saw' terrain. )
 ```
@@ -48,12 +62,14 @@ This phase is about changing all of that to doubles,
 Research - (I use stack overflow 3 times a day in my day job, so that's where google takes me.)
 
 http://stackoverflow.com/questions/611732/what-to-do-with-java-bigdecimal-performance
+
 http://stackoverflow.com/questions/1378044/how-using-bigdecimal-would-affect-application-performance
+
 http://stackoverflow.com/questions/3413448/double-vs-bigdecimal
 
 *Best Answer
 
-A BigDecimal is an exact way of representing numbers. A Double has a certain precision. Working with doubles of various magnitudes (say d1=1000.0 and d2=0.001) could result in the 0.001 being dropped alltogether when summing as the difference in magnitude is so large. With BigDecimal this would not happen.
+A BigDecimal is an exact way of representing numbers. A Double has a certain precision. Working with doubles of various magnitudes (say d1=1000.0 and d2=0.001) could result in the 0.001 being dropped altogether when summing as the difference in magnitude is so large. With BigDecimal this would not happen.
 
 The disadvantage of BigDecimal is that it's slower, and it's a bit more difficult to program algorithms that way (due to + - * and / not being overloaded).
 
@@ -66,9 +82,9 @@ https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
 #Phase 4 - Better Directions
 Done 11/8
 
-- Change dir from ordinal positions to degrees. Zero is north.  Show a circle.
-- Agents get dirWiggle (degrees to wander while going straight).
-- Agents get ability to random turn
+* Change dir from ordinal positions to degrees. Zero is north.  Show a circle.
+* Agents get dirWiggle (degrees to wander while going straight).
+* Agents get ability to random turn
 
 
 Example Terrain after circle:
@@ -93,8 +109,8 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 ```
 In the interest of science, I ran one with plenty of turns.
 
-- chanceFwd of .6 (only 60% chance of going forward)
-- dirWiggle of 10 degrees - Each forward includes a random +/- 10
+* chanceFwd of .6 (only 60% chance of going forward)
+* dirWiggle of 10 degrees - Each forward includes a random +/- 10
 
 ```
 
@@ -128,10 +144,9 @@ X		Wall
 
 Differentiate between Actor and Physical models
 
-- Actor is overall direction
+* Actor is overall direction
+* Physical takes into account terrain 
 
-- Physical takes into account terrain 
+?Speed variable
 
-Speed variable
-
-Spaces on the map are 100x100
+?Spaces on the map are 100x100
