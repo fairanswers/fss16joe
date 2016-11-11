@@ -14,7 +14,7 @@ public class Terrain {
 	
 	int wid;
 	int len;
-	String [][] detail;
+	GridSquare [][] detail;
 	public Terrain(Map map) {
 		this(map, DEFAULT);
 	}
@@ -22,10 +22,10 @@ public class Terrain {
 	public Terrain(Map map, String fill) {
 		this.wid = map.getWid();
 		this.len = map.getLen();
-		detail = new String[wid][len];
+		detail = new GridSquare[wid][len];
 		for(int x=0; x<wid; x++){
 			for(int y=0; y<len; y++){
-				detail[x][y] = fill;
+				detail[x][y] = new GridSquare(fill);
 			}
 		}	
 	}
@@ -39,7 +39,7 @@ public class Terrain {
 //	}
 
 	public String get(int x, int y){
-		return detail[x][y];
+		return detail[x][y].getView();
 	}
 
 	//http://stackoverflow.com/questions/6468730/converting-double-to-integer-in-java
@@ -52,7 +52,7 @@ public class Terrain {
 	}
 
 	public void setTerrain(int x, int y, String terrainAt) {
-		detail[x][y] = terrainAt;
+		detail[x][y].setView(terrainAt);
 	}
 	public void setTerrain(double x, double y, String terrainAt) {
 		setTerrain((int)x, (int)y, terrainAt);
@@ -99,11 +99,11 @@ public class Terrain {
 		this.len = len;
 	}
 
-	public String[][] getDetail() {
+	public GridSquare[][] getDetail() {
 		return detail;
 	}
 
-	public void setDetail(String[][] detail) {
+	public void setGridSquare(GridSquare[][] detail) {
 		this.detail = detail;
 	}
 

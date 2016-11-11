@@ -10,21 +10,29 @@ The decisions will include
 Objectives:
 * Percent map coverage (maximize)
 * Time (measured in clock ticks)
+* POI found
 
 Interesting Scenarios
-* Agents communicate recent findings.
-* Defenders take out agents (loss of data)
-* Agents have a set rate of failure.
-* POI are mobile (old data is less reliable)
-* Known POI location vs. unknown POI location.
+* Known POI location vs. unknown POI location.  Bomb dogs and MIA search and rescue
 * Starting at random points vs the same point.
 * Solar charging - Rain, sunshine.  Affects charge rate, wet terrain slows speed.
+
+Not on agenda
+* Agents communicate recent findings.
+* Defenders take out agents (loss of data)
+* POI are mobile (old data is less reliable)
+* Agents have a set rate of failure.
+
 
 FSM in java
 Adapted from python code.  Starts in the Model class.
 
 Example PSO
 http://unbox.org/open/trunk/472/14/spring/doc/games.md
+
+Jmetal
+http://jmetal.github.io/jMetal/
+
 
 #Phase 1 - Make a map and an agent.  Get them to move.
 Done 11/3.
@@ -129,7 +137,15 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 T01234567890123456789012345678901234567890123456789012345678901234567890123456789T
 ```
 
+# Phase 5 - Finish the terrain
 
+
+# Phase 6 - Abstracting Wants and Needs
+Actor Model = Want - desired direction:  Given what we know, generally head that direction
+
+Physical Model = Need - Avoiding obstacles:  Don't get stuck.
+
+This may be a case where we are able to use state to give precedence to one model over the other.
 #Future
 
 Terrain is varied
@@ -150,3 +166,10 @@ Differentiate between Actor and Physical models
 ?Speed variable
 
 ?Spaces on the map are 100x100
+
+?Bomb dog- don't step on the bombs
+
+?MIA Rescue - Find known number MIAs
+
+?Active Shoter - must stay behind hill.  Hear shots to estimate location.  Figure out how to stay behind cover.
+
