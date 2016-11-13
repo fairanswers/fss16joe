@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fairanswers.mapExplore.fsm.Model;
+
 public class MapTest {
 
 	private Map map;
@@ -43,5 +45,24 @@ public class MapTest {
 		assertFalse(map.isValid(0, map.getLen() ) );
 		assertFalse(map.isValid(map.getWid(), 0));
 		assertFalse(map.isValid(map.getWid(), map.getLen()));
+	}
+	
+	@Test
+	public void testTerrainVaried(){
+		Model.setRandomSeed(1L);
+		Map map = new Map(10,4);
+		Terrain t = new Terrain(map, 1.0, 1L);
+		map.setTerrain(t);
+		System.out.println(t);
+	}
+
+	@Test
+	public void testTerrainBoring(){
+		Map map = new Map(10,4);
+		Terrain t = new Terrain(map, 10, 1L);
+		map.setTerrain(t);
+		System.out.println(map);
+		System.out.println(t);
+//		assertTrue("Checking terrain", map.getTerrain().get(3, 3).equals(Terrain.DEFAULT) );
 	}
 }

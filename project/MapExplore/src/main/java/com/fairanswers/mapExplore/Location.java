@@ -33,4 +33,8 @@ public class Location {
 	public void setY(double y) {
 		this.y = y;
 	}
+
+	public Location mirror() {
+		return new Location(-1*getX(), -1*getY());
+	}
 }

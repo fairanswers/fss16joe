@@ -13,6 +13,7 @@ public class Agent extends Model {
 	double dirWiggle = 1;
 	private Double chanceFwd = .99;
 	int tick=0;
+	private double unExploredWeight=1;
 
 	public Agent() {
 	}
@@ -31,24 +32,81 @@ public class Agent extends Model {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
-		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy the same
+		this.ter = new Terrain(map, Terrain.UNKNOWN, Terrain.UNKNOWN_WT);// Gets blank copy the same
 														// size.
 		ter.setTerrain(x, y, map.getViewAt(x, y));
 	}
 
+	public double decideDir() {
+		double tmpDir = dir //Where we're currently headed
+				//+ dirToPOI() * weightOfPOI() //Dir to POI (if known)
+				+ subtractAngles(unexploredDir(), dir ) * getUnExploredWeight() // Away from known places
+				;
+		//+ getDir() * weightOfMomentum();
+				
+		// Mostly go forward
+		if (getRandom() < chanceFwd) {
+			Double wiggle = getRandomDouble(0 - dirWiggle, dirWiggle);
+			return tmpDir + wiggle;
+		} else {
+			return turnRandom(90);
+		}
+	}
+
+	public double subtractAngles(double first, double second) {
+//		if(second - first < 0){
+//			second += 360;
+//		}
+		double a = first - second;
+		a = ((a+180) % 360 ) -180;
+		if(a > 180)
+			a = a - 360;
+		if(a < -180)
+			a = a + 360;
+		return a;
+	}
+
+	public int unexploredDir() {
+		Terrain t = getTer();
+		Location l = t.weight(loc, Terrain.UNKNOWN);
+		return dirFromWeight(l);
+	}
+
+	public int dirFromWeight(Location l) {
+		if(l.equals(0,0)){
+			return 0;
+		}
+		int d=  (int) Math.toDegrees(Math.atan2(l.getY(), l.getX() ) ) ;
+		if(d < 0)
+			d = d + 360;
+		return d;
+	}
+
+	private double weightOfMomentum() {
+		return 1;
+	}
+
+	private int weightOfPOI() {
+		return 1;
+	}
+
+	private int dirToPOI() {
+		return 45;
+	}
+
 	public void move(double dir, double speed) {
 		setDir(dir);
-		double xDir = getXTravel(dir, speed);
-		double yDir = getYTravel(dir, speed);
-		loc.setX(loc.getX() + xDir);
-		if (!map.isValid(loc.getX(), loc.getY())) {
-			loc.setX(loc.getX() - xDir);
+		double xTravel = getXTravel(dir, speed);
+		double yTravel = getYTravel(dir, speed);
+		loc.setX(loc.getX() + xTravel);
+		loc.setY(loc.getY() + yTravel);
+		if (!map.isValid(loc.getX()+xTravel, loc.getY()+yTravel) ) {
 			setDir(turnRandom(90));
+			return;
 		}
-		loc.setY(loc.getY() + yDir);
-		if (!map.isValid(loc.getX(), loc.getY())) {
-			loc.setY(loc.getY() - yDir);
+		if (map.isCliff(loc.getX()+xTravel, loc.getY()+yTravel) ) {
 			setDir(turnRandom(90));
+			return;
 		}
 
 	}
@@ -61,32 +119,32 @@ public class Agent extends Model {
 	}
 
 	public double turnRight(double i) {
-		System.out.println(" * * * RIGHT TURN");
-		setDir(dir + i );
+		//System.out.println(" * * * RIGHT TURN");
+		setDir(dir - i );
 		return this.dir;
 
 	}
 
 	public double turnLeft(double i) {
-		System.out.println(" * * * LEFT TURN");
-		setDir( dir - i);
+		//System.out.println(" * * * LEFT TURN");
+		setDir( dir + i);
 		return dir;
 
 	}
 
 	public double getXTravel(double dir2, double spd) {
-		double travel = Math.sin(Math.toRadians(dir2)) * spd;
+		double travel = Math.cos(Math.toRadians(dir2)) * spd;
 		return travel;
 	}
 
 	public double getYTravel(double dir2, double spd) {
-		double travel = Math.cos(Math.toRadians(dir2)) * spd;
+		double travel = Math.sin(Math.toRadians(dir2)) * spd;
 		return travel;
 	}
 
 	@Override
 	public void tick(int tick) {
-		tick++;
+		this.tick = tick;
 		move(decideDir(), speed);
 		look(loc.getX(), loc.getY(), map);
 	}
@@ -100,23 +158,13 @@ public class Agent extends Model {
 			}
 		}
 	}
-
-	private double decideDir() {
-		// Mostly go forward
-		if (getRandom() < chanceFwd) {
-			Double wiggle = getRandomDouble(0 - dirWiggle, dirWiggle);
-			return dir + wiggle;
-		} else {
-			return turnRandom(90);
-		}
-	}
-
+	
 	public String toString(boolean brief) {
 		if (!brief)
 			return toString();
 		else
 			return "Agent [name=" + name + ", loc=" + loc + ", speed=" + Map.numFormat.format(speed) + ", dir="
-					+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see);
+					+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see)+ "tick="+tick;
 	}
 
 	@Override
@@ -215,6 +263,14 @@ public class Agent extends Model {
 
 	public void setTick(int tick) {
 		this.tick = tick;
+	}
+
+	public double getUnExploredWeight() {
+		return unExploredWeight;
+	}
+
+	public void setUnExploredWeight(double unExploredWeight) {
+		this.unExploredWeight = unExploredWeight;
 	}
 
 }

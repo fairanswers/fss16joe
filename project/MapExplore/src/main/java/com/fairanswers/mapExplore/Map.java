@@ -138,6 +138,15 @@ public class Map {
 			return false;
 		}
 	}
+
+	public boolean isCliff(double x, double y) {
+		String t = getViewAt(x, y);
+		if(t.equals(Terrain.CLIFF)){
+			//System.out.println("Turning from a cliff.");
+			return true;
+		}
+		return false;
+	}
 	
 	
 }
