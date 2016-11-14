@@ -2,6 +2,10 @@ package com.fairanswers.mapExplore;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,5 +68,20 @@ public class MapTest {
 		System.out.println(map);
 		System.out.println(t);
 //		assertTrue("Checking terrain", map.getTerrain().get(3, 3).equals(Terrain.DEFAULT) );
+	}
+	
+	@Test
+	public void testSaveAndLoad() throws IOException{
+		String filename = FileUtils.getTempDirectoryPath()+"map.tmp";
+		FileUtils.deleteQuietly(new File(filename));
+		Map map = new Map(3, 3);
+		map.getAgents().add(new Agent("a1", 1, 1, map) );
+		map.getAgents().add(new Agent("a1", 2, 2, map) );
+		map.save(filename);
+		Map loaded = Map.load(filename);
+		for(int i=0; i< 100; i++){
+			loaded.tick();
+			System.out.println(map);
+		}
 	}
 }

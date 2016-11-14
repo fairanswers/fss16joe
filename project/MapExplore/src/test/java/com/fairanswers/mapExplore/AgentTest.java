@@ -84,14 +84,14 @@ public class AgentTest {
 
 	@Test
 	public void testBigMap() {
-		int multiplier = 10;
-		map = new Map(10*multiplier, 10*multiplier);
+		int multiplier = 100;
+		map = new Map(multiplier, multiplier);
 		map.setTerrain(new Terrain(map, 1.0, 1L) );
 		agent = new Agent("a3", 1, 1, 30, .2, map);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
 		
-		for (int i = 0; i < 10000*multiplier; i++) {
+		for (int i = 0; i < 100*multiplier; i++) {
 			map.tick();
 			if(map.getTick() % 100== 0 ){
 				System.out.println(map.getTick());
@@ -100,6 +100,52 @@ public class AgentTest {
 			}
 		}
 		System.out.println(agent);
+		//System.out.println(map);
+	}
+
+	@Test
+	public void test2Agents() {
+		int multiplier = 10;
+		map = new Map(10*multiplier, 10*multiplier);
+		map.setTerrain(new Terrain(map, 1.0, 1L) );
+		Agent a = new Agent("a", 0, 0, 30, .2, map);
+		Agent b = new Agent("b", map.getWid()-1, map.getLen()-1, 30, .2, map);
+		b.setTer(a.getTer());
+		map.getAgents().add(a);
+		map.getAgents().add(b);
+		Model.setRandomSeed(1L);
+		
+		for (int i = 0; i < 1000*multiplier; i++) {
+			map.tick();
+			if(map.getTick() % 100== 0 ){
+				System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				
+			}
+		}
+		System.out.println(a);
+		System.out.println(b);
+		//System.out.println(map);
+	}
+	
+	@Test
+	public void testAllAgentsSettings() {
+		int multiplier = 10;
+		map = new Map(10*multiplier, 10*multiplier);
+		map.setTerrain(new Terrain(map, 1.0, 1L) );
+		Agent a = new Agent("a", 1, 2, 1, 0, 3, 10, .9, 1, map);
+		map.getAgents().add(a);
+		Model.setRandomSeed(1L);
+		
+		for (int i = 0; i < 1000*multiplier; i++) {
+			map.tick();
+			if(map.getTick() % 100== 0 ){
+				System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				
+			}
+		}
+		System.out.println(a);
 		//System.out.println(map);
 	}
 

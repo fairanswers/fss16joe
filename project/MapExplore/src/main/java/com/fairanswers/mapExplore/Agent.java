@@ -1,6 +1,10 @@
 package com.fairanswers.mapExplore;
 
+import java.beans.Transient;
+import java.util.ArrayList;
+
 import com.fairanswers.mapExplore.fsm.Model;
+import com.fairanswers.mapExplore.fsm.Trans;
 
 public class Agent extends Model {
 	String name; // UID
@@ -9,7 +13,7 @@ public class Agent extends Model {
 	double dir = 0; // Heading
 	double see = 1; // Visibility
 	Terrain ter; // Known terrain
-	Map map;
+	transient Map map; //Maps save agents.  infinite recursion on save.
 	double dirWiggle = 1;
 	private Double chanceFwd = .99;
 	int tick=0;
@@ -32,9 +36,23 @@ public class Agent extends Model {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
-		this.ter = new Terrain(map, Terrain.UNKNOWN, Terrain.UNKNOWN_WT);// Gets blank copy the same
+		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy the same
 														// size.
 		ter.setTerrain(x, y, map.getViewAt(x, y));
+	}
+
+	public Agent(String name, double x2, double y2, double speed, double dir, double see,
+			double dirWiggle, Double chanceFwd, double unExploredWeight, Map map) {
+		this.name = name;
+		this.loc = new Location(x2, y2);
+		this.speed = speed;
+		this.dir = dir;
+		this.see = see;
+		this.dirWiggle = dirWiggle;
+		this.chanceFwd = chanceFwd;
+		this.unExploredWeight = unExploredWeight;
+		this.map = map;
+		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy the same
 	}
 
 	public double decideDir() {

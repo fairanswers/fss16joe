@@ -278,29 +278,26 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 ```
 
 #Phase 6 - More Realistic Terrains
+Done 11/14
+Be able to save and load agents, maps and terrains.
 
-Be able to save and load maps and terrains.
-
-Separate executable with cmd line options for tests.
+Get some maps of paint ball arenas. Load them and have the agent run around.
 
 Better visibility (currently hard coded to 1)
 
-Take friction into account when planning routes.
-
-Get some maps of paintball arenas, battlefields (Fulda gap, Hunger Games)and see how they do.
 
 # Phase 7 - Abstracting Wants and Needs
-
 
 Differentiate between Actor and Physical models
 
 * Actor is overall direction
 * Physical takes into account terrain 
 
-
-This may be a case where we are able to use state (FSM) to give precedence to one model over the other.  States could be explore, primary direction, obstacle following, 
+This may be a case where we are able to use state (FSM) to give precedence to one model over the other.  States could be explore, bored, obstacle following
 
 #Phase 8 - Format the output for analysis
+
+Separate executable with cmd line options for tests.
 
 Review all the variables and make them scriptable from cmd line.
 
@@ -334,4 +331,6 @@ Happy
 ?MIA Rescue - Find known number MIAs
 
 ?Active Shoter - must stay behind hill.  Hear shots to estimate location.  Figure out how to stay behind cover.
+
+?Take friction into account when planning routes.
 

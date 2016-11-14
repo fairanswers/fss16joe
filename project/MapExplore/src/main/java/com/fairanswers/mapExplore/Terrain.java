@@ -3,6 +3,7 @@ package com.fairanswers.mapExplore;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.uma.jmetal.util.experiment.component.GenerateFriedmanTestTables;
@@ -18,7 +19,7 @@ public class Terrain {
 	private static final String TERRAIN_CORNER = "T";
 	public final String end = System.getProperty("line.separator");
 
-	HashMap<String, Double> weights = new HashMap<>();
+	HashMap<String, Double> weight = new HashMap<>();
 	public final static String PAVED = ".";
 	public final static double PAVED_WT = 100;
 	public final static String GRASS = ",";
@@ -35,24 +36,24 @@ public class Terrain {
 	private double varianceFactor;
 
 	public Terrain(Map map) {
-		this(map, DEFAULT, 0);
+		this(map, DEFAULT);
 	}
 	
-	public static Terrain getTerrainFromString(Map map, String details, double friction) throws Exception {
-		Terrain t = new Terrain(map);
-		int charCounter =0;
-		for (int y = map.getLen()-1; y >= 0; y--) {
-			for (int x = 0; x < map.getWid(); x++) {
-				try{
-					t.getDetail()[x][y] = new GridSquare(details.substring(charCounter, charCounter+1), friction);
-					charCounter++;
-				}catch(Exception e){
-					throw new Exception("Error loading terrain at x="+x+" y="+y+" for string "+details, e);
-				}
-			}
-		}
-		return t;
-	}
+//	public static Terrain getTerrainFromString(Map map, String details, double friction) throws Exception {
+//		Terrain t = new Terrain(map);
+//		int charCounter =0;
+//		for (int y = map.getLen()-1; y >= 0; y--) {
+//			for (int x = 0; x < map.getWid(); x++) {
+//				try{
+//					t.getDetail()[x][y] = new GridSquare(details.substring(charCounter, charCounter+1), friction);
+//					charCounter++;
+//				}catch(Exception e){
+//					throw new Exception("Error loading terrain at x="+x+" y="+y+" for string "+details, e);
+//				}
+//			}
+//		}
+//		return t;
+//	}
 
 	public String getSaveString() throws Exception {
 		StringBuffer sb = new StringBuffer();
@@ -71,26 +72,55 @@ public class Terrain {
 	}
 	
 	public void save(String filename) throws IOException, Exception{
-		FileUtils.writeStringToFile(FileUtils.getFile(filename), getSaveString(), "UTF-8");
+		StringBuffer data = new StringBuffer();
+		for(int y=len-1; y>=0; y--){
+			for(int x=0; x<wid; x++){
+				data.append(detail[x][y].getView() );
+			}
+			data.append(end);
+		}
+		FileUtils.writeStringToFile(FileUtils.getFile(filename), data.toString(), "UTF-8");
 	}
 
-	public static Terrain load(String filename, int wid, int len, double friction) throws IOException, Exception{
-		String s = FileUtils.readFileToString(new File(filename), "UTF-8");
-		Terrain t = Terrain.getTerrainFromString(new Map(wid,len), s, friction);
+	public static Terrain load(String filename, double friction) throws IOException, Exception{
+		List<String> s = FileUtils.readLines(new File(filename), "UTF-8");
+		Terrain t = Terrain.getTerrainFromStringList(new Map(s.get(0).length() ,s.size() ), s);
 		return t;
 		
 	}
 
-	public Terrain(Map map, String fill, double friction) {
-		weights.put(PAVED, PAVED_WT);
-		weights.put(GRASS, GRASS_WT);
-		weights.put(SLOPE, SLOPE_WT);
-		weights.put(CLIFF, CLIFF_WT);
+	private static Terrain getTerrainFromStringList(Map map, List<String> s) throws Exception {
+		Terrain t = new Terrain(map);
+		int charCounter =0;
+		for (int y = map.getLen()-1; y >= 0; y--) {
+			for (int x = 0; x < map.getWid(); x++) {
+				try{
+					String view=s.get(y).substring(x,x+1);
+					double friction = t.getWeight().get(view);
+					t.getDetail()[x][y] = new GridSquare(view, friction);
+					charCounter++;
+				}catch(Exception e){
+					throw new Exception("Error loading terrain at x="+x+" y="+y+" for string "+s.get(y), e);
+				}
+			}
+		}
+		return t;
+
+	}
+
+	public Terrain(Map map, String fill) {
+		weight.put(PAVED, PAVED_WT);
+		weight.put(GRASS, GRASS_WT);
+		weight.put(SLOPE, SLOPE_WT);
+		weight.put(CLIFF, CLIFF_WT);
+		weight.put(UNKNOWN, UNKNOWN_WT);
+		weight.put(DEFAULT, DEFAULT_WT);
 		this.wid = map.getWid();
 		this.len = map.getLen();
 		detail = new GridSquare[wid][len];
 		for (int x = 0; x < wid; x++) {
 			for (int y = 0; y < len; y++) {
+				double friction = weight.get(fill);
 				detail[x][y] = new GridSquare(fill, friction);
 			}
 		}
@@ -212,7 +242,7 @@ public class Terrain {
 	}
 
 	public static Terrain createAgentTerrain(Map map) {
-		return new Terrain(map, UNKNOWN, 0);
+		return new Terrain(map, UNKNOWN);
 	}
 
 	public void setTerrain(int x, int y, String terrainAt) {
@@ -234,7 +264,7 @@ public class Terrain {
 		sb.append(end);
 		for (int y = len - 1; y >= 0; y--) {
 			sb.append(y % 10);
-			for (int x = 0; x < wid - 1; x++) {
+			for (int x = 0; x < wid; x++) {
 				if (detail[x][y] == null) {
 					sb.append("E");
 				} else {
@@ -295,6 +325,18 @@ public class Terrain {
 
 	public void setVarianceFactor(double varianceFactor) {
 		this.varianceFactor = varianceFactor;
+	}
+
+	public HashMap<String, Double> getWeight() {
+		return weight;
+	}
+
+	public void setWeight(HashMap<String, Double> weight) {
+		this.weight = weight;
+	}
+
+	public String getEnd() {
+		return end;
 	}
 
 }

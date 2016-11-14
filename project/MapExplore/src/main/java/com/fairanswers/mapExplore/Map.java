@@ -1,8 +1,15 @@
 package com.fairanswers.mapExplore;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.apache.commons.io.FileUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /* Wrapper for ecosystem including:
  *  - Terrain for map
@@ -22,6 +29,7 @@ public class Map {
 	private int tick=0;
 	public final String end = System.getProperty("line.separator");
 	public static final DecimalFormat numFormat = new DecimalFormat("#.00");	
+	
 	public Map(int wid, int len){
 		this.wid = wid;
 		this.len = len;
@@ -147,6 +155,28 @@ public class Map {
 		}
 		return false;
 	}
-	
+
+	public String getSaveString() {
+		StringBuffer sb = new StringBuffer();
+		
+		return sb.toString();
+	}
+
+	public static Map load(String filename) throws IOException {
+		String s = FileUtils.readFileToString(new File(filename), "UTF-8");
+		Gson gson = new Gson();
+		Map map = gson.fromJson(s, Map.class );
+		for(Agent a:map.getAgents() ){
+			a.setMap(map);
+		}
+		return map;
+	}
+
+	public void save(String filename) throws IOException {
+		Gson gson =new GsonBuilder().setPrettyPrinting().create();
+		String str = gson.toJson(this);
+		FileUtils.writeStringToFile(FileUtils.getFile(filename), str, "UTF-8");
+		
+	}
 	
 }

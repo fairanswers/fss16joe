@@ -23,9 +23,9 @@ public class TerrainTest {
 	@Before
 	public void setUp() throws Exception {
 		Map map = new Map(5, 5);
-		ta = new Terrain(map, Terrain.GRASS, .2);
+		ta = new Terrain(map, Terrain.GRASS);
 		ta.setTerrain(1, 1, Terrain.PAVED);
-		tb = new Terrain(map, Terrain.UNKNOWN, .2);
+		tb = new Terrain(map, Terrain.UNKNOWN);
 	}
 
 	@After
@@ -63,32 +63,37 @@ public class TerrainTest {
 		assertTrue(ta.compare(9, 10) == -1);
 	}
 	
-	@Test
-	public void testFromString() throws Exception{
-		Map map = new Map(5, 5);
-		map.setTerrain(Terrain.getTerrainFromString(map, tstring, .1));
-		System.out.println(map);
-		assertEquals("A", map.getViewAt(0, 4));//Upper Left
-		assertEquals("z", map.getViewAt(4, 0));//Lower Right
-	}
+//	@Test
+//	public void testFromString() throws Exception{
+//		Map map = new Map(5, 5);
+//		map.setTerrain(Terrain.getTerrainFromString(map, tstring, .1));
+//		System.out.println(map);
+//		assertEquals("A", map.getViewAt(0, 4));//Upper Left
+//		assertEquals("z", map.getViewAt(4, 0));//Lower Right
+//	}
 	
-	@Test
-	public void testToFileString() throws Exception{
-		Map map = new Map(5, 5);
-		map.setTerrain(Terrain.getTerrainFromString(map, tstring, .1));
-		System.out.println(map.getTerrain().getSaveString() );
-		assertEquals("A", map.getViewAt(0, 4));//Upper Left
-		assertEquals("z", map.getViewAt(4, 0));//Lower Right
-	}
+//	@Test
+//	public void testToFileString() throws Exception{
+//		Map map = new Map(5, 5);
+//		map.setTerrain(Terrain.getTerrainFromString(map, tstring, .1));
+//		System.out.println(map.getTerrain().getSaveString() );
+//		assertEquals("A", map.getViewAt(0, 4));//Upper Left
+//		assertEquals("z", map.getViewAt(4, 0));//Lower Right
+//	}
 
 	@Test
-	public void saveAndLoadFile() throws Exception{
-		String filename = FileUtils.getTempDirectoryPath()+"terrain.tmp";
-		FileUtils.deleteQuietly(new File(filename));
-		Map map = new Map(5, 5);
-		map.setTerrain(Terrain.getTerrainFromString(map, tstring, .1));
-		map.getTerrain().save(filename);
-		Terrain nt = Terrain.load(filename, 5, 5, .1);
-		assertEquals(tstring, nt.getSaveString() );
+	public void testLoadHandmadeFile() throws Exception{
+		String filename = "./maps/map1.txt";
+		Map map = new Map(10, 10);
+		Terrain loadTer = Terrain.load(filename, 1);
+		map.setTerrain(loadTer);
+		assertEquals("....................................................................................................", loadTer.getSaveString());
+		filename = "./maps/map2.txt";
+		map = new Map(8, 58);
+		loadTer = Terrain.load(filename, 1);
+		map.setTerrain(loadTer);
+		String s = loadTer.getSaveString();
+		System.out.println(loadTer);
 	}
+
 }
