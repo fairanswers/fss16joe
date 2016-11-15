@@ -56,11 +56,11 @@ public class Agent extends Model {
 	}
 
 	public double decideDir() {
-		double tmpDir = dir //Where we're currently headed
+		double tmpDir = this.dir ;//Where we're currently headed
 				//+ dirToPOI() * weightOfPOI() //Dir to POI (if known)
-				+ subtractAngles(unexploredDir(), dir ) * getUnExploredWeight() // Away from known places
-				;
-		//+ getDir() * weightOfMomentum();
+		double exploreDir =  unexploredDir();
+		exploreDir = subtractAngles(exploreDir, this.dir ) * getUnExploredWeight(); // Away from known places
+		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 				
 		// Mostly go forward
 		if (getRandom() < chanceFwd) {
@@ -71,11 +71,17 @@ public class Agent extends Model {
 		}
 	}
 
+	//Returns positive or negative of difference.
 	public double subtractAngles(double first, double second) {
 //		if(second - first < 0){
 //			second += 360;
 //		}
 		double a = first - second;
+		a = getAbsoluteDegrees(a);
+		return a;
+	}
+
+	private double getAbsoluteDegrees(double a) {
 		a = ((a+180) % 360 ) -180;
 		if(a > 180)
 			a = a - 360;
@@ -113,11 +119,8 @@ public class Agent extends Model {
 	}
 
 	public void move(double dir, double speed) {
-		setDir(dir);
 		double xTravel = getXTravel(dir, speed);
 		double yTravel = getYTravel(dir, speed);
-		loc.setX(loc.getX() + xTravel);
-		loc.setY(loc.getY() + yTravel);
 		if (!map.isValid(loc.getX()+xTravel, loc.getY()+yTravel) ) {
 			setDir(turnRandom(90));
 			return;
@@ -126,7 +129,9 @@ public class Agent extends Model {
 			setDir(turnRandom(90));
 			return;
 		}
-
+		setDir(dir);
+		loc.setX(loc.getX() + xTravel);
+		loc.setY(loc.getY() + yTravel);
 	}
 
 	private double turnRandom(double i) {

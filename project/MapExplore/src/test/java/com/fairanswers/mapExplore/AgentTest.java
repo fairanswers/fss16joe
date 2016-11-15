@@ -1,6 +1,9 @@
 package com.fairanswers.mapExplore;
 
 import static org.junit.Assert.*;
+
+import java.io.IOException;
+
 import static java.lang.Math.*;
 import org.junit.After;
 import org.junit.Before;
@@ -128,6 +131,60 @@ public class AgentTest {
 		//System.out.println(map);
 	}
 	
+	@Test
+	public void test2AgentsPaintBallWall() throws IOException, Exception {
+		Terrain t = Terrain.load("./maps/map3.txt", 1);
+		Map map = new Map(t.getWid(), t.getLen() );
+		map.setTerrain(t);
+		Agent a = new Agent("a", 1.0, 5.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.1, map);
+		a.setDir(0);
+		Agent b = new Agent("a", map.getWid()-1, 5.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.1, map);
+		b.setDir(180);
+		b.setTer(a.getTer());
+		map.getAgents().add(a);
+		map.getAgents().add(b);
+		Model.setRandomSeed(1L);
+		
+		for (int i = 0; i < 1000; i++) {
+			map.tick();
+//			System.out.println(a);
+			if(map.getTick() % 1000== 0 ){
+				System.out.println(map.getTick());
+			}
+		}
+		System.out.println(map);
+		System.out.println(a);
+		//System.out.println(b);
+		//System.out.println(map);
+	}
+
+	@Test
+	public void test2AgentsPaintBall() throws IOException, Exception {
+		Terrain t = Terrain.load("./maps/map2.txt", 1);
+		Map map = new Map(t.getWid(), t.getLen() );
+		map.setTerrain(t);
+		Agent a = new Agent("a", 1.0, 5.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.1, map);
+		a.setDir(0);
+		Agent b = new Agent("a", map.getWid()-1, 5.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.1, map);
+		b.setDir(180);
+		b.setTer(a.getTer());
+		map.getAgents().add(a);
+		map.getAgents().add(b);
+		Model.setRandomSeed(1L);
+		
+		for (int i = 0; i < 100; i++) {
+			map.tick();
+//			System.out.println(a);
+			if(map.getTick() % 10000== 0 ){
+				System.out.println(map.getTick());
+			}
+		}
+		System.out.println(map);
+		System.out.println(a);
+		//System.out.println(b);
+		//System.out.println(map);
+	}
+
 	@Test
 	public void testAllAgentsSettings() {
 		int multiplier = 10;

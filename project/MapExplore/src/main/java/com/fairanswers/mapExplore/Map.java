@@ -8,6 +8,7 @@ import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
 
+import com.fairanswers.mapExplore.fsm.Model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -83,7 +84,7 @@ public class Map {
 	public int tick(){
 		tick++;
 		//Shuffle the agents and let them move
-		Collections.shuffle(agents);
+		Collections.shuffle(agents, Model.getRandomGenerator() );
 		for(Agent a:agents){
 			a.tick(tick);
 		}

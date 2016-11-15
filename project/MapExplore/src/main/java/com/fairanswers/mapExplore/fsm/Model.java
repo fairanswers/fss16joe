@@ -69,6 +69,7 @@ public class Model {
 		System.out.println("Setting seed "+seed);
 		randomNumberGenerator.setSeed(seed);
 		
+		
 	}
 
 	public static Random getRandomGenerator() {

@@ -295,6 +295,10 @@ Differentiate between Actor and Physical models
 
 This may be a case where we are able to use state (FSM) to give precedence to one model over the other.  States could be explore, bored, obstacle following
 
+* * * Collisions are not working properly.  See AgentTest.test2AgentsPaintBallWall.  Agents can briefly go off the map, too.  Probably diff. between checking average and casting float to int.
+
+* * * Random generators have to be fed directly to the shuffle method, or it makes a new one.
+
 #Phase 8 - Format the output for analysis
 
 Separate executable with cmd line options for tests.
