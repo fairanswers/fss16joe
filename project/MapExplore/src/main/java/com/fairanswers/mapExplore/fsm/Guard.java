@@ -1,15 +1,21 @@
 package com.fairanswers.mapExplore.fsm;
 
-public abstract class Guard { //aka "Gaurd"
+public class Guard { //aka "Gaurd"
 	String name;
 	State to;
+	
+	public Guard(){
+		
+	}
 	
 	public Guard(String name, State to) {
 		this.name = name;
 		this.to = to;
 	}
 
-	public abstract boolean isTrue();
+	public boolean isTrue(){
+		return true;
+	}
 
 	public String getName() {
 		return name;

@@ -26,13 +26,16 @@ public class Agent {
 	private double unExploredWeight=1;
 	private int boredCounter;
 	private int boredLimit = 20;
-	private Model model;
+	private Model model; // Can't json because of abstract guard and recursion
+	private State excitedState;
+	private State boredState;
 
 	public Agent() {
 	}
 
 	public Agent(String name) {
 		this.name = name;
+		createModel();
 	}
 
 	public Agent(String name, double x, double y, Map map) {
@@ -41,6 +44,7 @@ public class Agent {
 		this.map = map;
 		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same size
 		ter.setTerrain(x, y, map.getViewAt(x, y));
+		createModel();
 	}
 
 	public Agent(String name, double x, double y, double dirWiggle, double chanceFwd, Map map) {
@@ -61,6 +65,7 @@ public class Agent {
 		this.unExploredWeight = unExploredWeight;
 		this.map = map;
 		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy the same
+		createModel();
 	}
 
 	public double decideDir() {
@@ -127,11 +132,11 @@ public class Agent {
 	}
 	
 	public void createModel(){
-		State one = new State(EXCITED, false);
-		State two = new State(BORED, false);
+		excitedState = new State(EXCITED, false);
+		boredState = new State(BORED, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(one, new Always("BORING", two)) );
-		t.add(new Trans(two, new Always("EXCITING", one)) );
+		t.add(new Trans(excitedState, new Always("BORING", boredState)) );
+		t.add(new Trans(boredState, new Always("EXCITING", excitedState)) );
 		model = new Model(t);
 	}
 
@@ -188,6 +193,15 @@ public class Agent {
 		int found = look(loc.getX(), loc.getY(), map);
 		if(found > 0){
 			boredCounter = 0;
+			if(model.getHere()==boredState){
+				model.setHere(excitedState);
+			}
+		}
+		else{
+			boredCounter++;
+			if(boredCounter > boredLimit){
+				model.setHere(boredState);
+			}
 		}
 	}
 

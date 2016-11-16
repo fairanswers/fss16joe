@@ -7,7 +7,7 @@ public class State {
 	String name;
 	int visits=0;
 	boolean stop = false;
-	ArrayList<Guard> guards = new ArrayList<Guard>();
+	transient ArrayList<Guard> guards = new ArrayList<Guard>();
 	
 	public State(String name, boolean stop){
 		this.name = name;

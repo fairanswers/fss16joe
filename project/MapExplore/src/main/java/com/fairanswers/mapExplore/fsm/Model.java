@@ -46,6 +46,46 @@ public class Model {
 		here = here.next();
 	}
 	
+	public static Long getRandomSeed() {
+		return randomSeed;
+	}
+
+	public static void setRandomSeed(Long randomSeed) {
+		Model.randomSeed = randomSeed;
+	}
+
+	public HashMap<String, State> getStates() {
+		return states;
+	}
+
+	public void setStates(HashMap<String, State> states) {
+		this.states = states;
+	}
+
+	public ArrayList<Trans> getTrans() {
+		return trans;
+	}
+
+	public void setTrans(ArrayList<Trans> trans) {
+		this.trans = trans;
+	}
+
+	public State getFirst() {
+		return first;
+	}
+
+	public void setFirst(State first) {
+		this.first = first;
+	}
+
+	public State getHere() {
+		return here;
+	}
+
+	public void setHere(State here) {
+		this.here = here;
+	}
+
 	public static int getRandomInt(int top){
 		return randomNumberGenerator.nextInt(top);
 	}
