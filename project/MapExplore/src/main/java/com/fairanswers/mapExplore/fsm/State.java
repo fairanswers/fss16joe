@@ -59,4 +59,9 @@ public class State {
 	public void setStop(boolean stop) {
 		this.stop = stop;
 	}
+	@Override
+	public String toString() {
+		return "State [name=" + name + ", visits=" + visits + ", stop=" + stop + ", guards=" + guards + "]";
+	}
+	
 }

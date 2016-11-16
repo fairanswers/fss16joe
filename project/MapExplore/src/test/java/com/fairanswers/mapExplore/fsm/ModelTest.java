@@ -25,7 +25,7 @@ public class ModelTest {
 		State two = new State("two", true);
 		Guard always = new Always("always", two);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(one, always, two) );
+		t.add(new Trans(one, always) );
 		Model m = new Model(t);
 		m.run();
 	}
@@ -34,12 +34,13 @@ public class ModelTest {
 	public void testLooping() {
 		State one = new State("one", false);
 		State two = new State("two", true);
-		Guard always = new Always("always", two);
-		Guard maybe = new Maybe("maybe", one);
+		Guard always = new Maybe("likely", one, .9);
+		Guard maybe = new Maybe("maybe", two, .1);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(one, always, two) );
-		t.add(new Trans(one, maybe, two) );
-		Model m = new Model(t,6L);			// Seed = 5 
+		t.add(new Trans(one, always) );
+		t.add(new Trans(one, maybe) );
+		Model m = new Model(t);
+		Model.setRandomSeed(1L);
 		m.run();
 	}
 	

@@ -19,11 +19,6 @@ public class Model {
 	}
 
 	public Model(ArrayList<Trans> trans){
-		this(trans, randomSeed);
-	}
-	
-	public Model(ArrayList<Trans> trans, Long seed){
-		setRandomSeed(seed);
 		createModel(trans);
 	}
 
@@ -39,8 +34,10 @@ public class Model {
 
 	public void run() {
 		System.out.println("Starting: seed = "+randomSeed);
+		int tock=0;
 		while(here.isStop() == false){
-			here = here.next();
+			tick(tock++);
+			here.setVisits(here.getVisits()+1);
 		}
 	}
 	
@@ -66,10 +63,7 @@ public class Model {
 
 	public static void setRandomSeed(long seed) {
 		randomSeed= seed;
-		System.out.println("Setting seed "+seed);
 		randomNumberGenerator.setSeed(seed);
-		
-		
 	}
 
 	public static Random getRandomGenerator() {

@@ -3,10 +3,16 @@ package com.fairanswers.mapExplore;
 import java.beans.Transient;
 import java.util.ArrayList;
 
+import com.fairanswers.mapExplore.fsm.Always;
+import com.fairanswers.mapExplore.fsm.Guard;
+import com.fairanswers.mapExplore.fsm.Maybe;
 import com.fairanswers.mapExplore.fsm.Model;
+import com.fairanswers.mapExplore.fsm.State;
 import com.fairanswers.mapExplore.fsm.Trans;
 
-public class Agent extends Model {
+public class Agent {
+	private static final String EXCITED = "EXCITED";
+	private static final String BORED = "BORED";
 	String name; // UID
 	Location loc;
 	double speed = 1; // distance per tick
@@ -18,6 +24,9 @@ public class Agent extends Model {
 	private Double chanceFwd = .99;
 	int tick=0;
 	private double unExploredWeight=1;
+	private int boredCounter;
+	private int boredLimit = 20;
+	private Model model;
 
 	public Agent() {
 	}
@@ -26,19 +35,18 @@ public class Agent extends Model {
 		this.name = name;
 	}
 
-	public Agent(String name, double x, double y, double dirWiggle, double chanceFwd, Map map) {
-		this(name, x, y, map);
-		this.dirWiggle = dirWiggle;
-		this.chanceFwd = chanceFwd;
-	}
-
 	public Agent(String name, double x, double y, Map map) {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
-		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy the same
-														// size.
+		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same size
 		ter.setTerrain(x, y, map.getViewAt(x, y));
+	}
+
+	public Agent(String name, double x, double y, double dirWiggle, double chanceFwd, Map map) {
+		this(name, x, y, map);
+		this.dirWiggle = dirWiggle;
+		this.chanceFwd = chanceFwd;
 	}
 
 	public Agent(String name, double x2, double y2, double speed, double dir, double see,
@@ -63,8 +71,8 @@ public class Agent extends Model {
 		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 				
 		// Mostly go forward
-		if (getRandom() < chanceFwd) {
-			Double wiggle = getRandomDouble(0 - dirWiggle, dirWiggle);
+		if (Model.getRandom() < chanceFwd) {
+			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
 			return tmpDir + wiggle;
 		} else {
 			return turnRandom(90);
@@ -117,6 +125,15 @@ public class Agent extends Model {
 	private int dirToPOI() {
 		return 45;
 	}
+	
+	public void createModel(){
+		State one = new State(EXCITED, false);
+		State two = new State(BORED, false);
+		ArrayList<Trans> t = new ArrayList<Trans>();
+		t.add(new Trans(one, new Always("BORING", two)) );
+		t.add(new Trans(two, new Always("EXCITING", one)) );
+		model = new Model(t);
+	}
 
 	public void move(double dir, double speed) {
 		double xTravel = getXTravel(dir, speed);
@@ -135,7 +152,7 @@ public class Agent extends Model {
 	}
 
 	private double turnRandom(double i) {
-		if (getRandom() < .5)
+		if (Model.getRandom() < .5)
 			return turnRight(i);
 		else
 			return turnLeft(i);
@@ -165,21 +182,28 @@ public class Agent extends Model {
 		return travel;
 	}
 
-	@Override
 	public void tick(int tick) {
 		this.tick = tick;
 		move(decideDir(), speed);
-		look(loc.getX(), loc.getY(), map);
+		int found = look(loc.getX(), loc.getY(), map);
+		if(found > 0){
+			boredCounter = 0;
+		}
 	}
 
-	public void look(double xCenter, double yCenter, Map map) {
+	public int look(double xCenter, double yCenter, Map map) {
+		int found = 0;
 		for (double y = yCenter - see; y <= yCenter + see; y=y+1.0) {
 			for (double x = xCenter - see; x <= xCenter + see; x=x+1.0) {
 				if (map.isValid(x, y)) {
+					if (ter.get(x, y).equals(ter.UNKNOWN)) {
+						found++;
+					}
 					ter.setTerrain(x, y, map.getTerrain().get(x, y));
 				}
 			}
 		}
+		return found;
 	}
 	
 	public String toString(boolean brief) {
@@ -294,6 +318,22 @@ public class Agent extends Model {
 
 	public void setUnExploredWeight(double unExploredWeight) {
 		this.unExploredWeight = unExploredWeight;
+	}
+
+	public int getBoredCounter() {
+		return boredCounter;
+	}
+
+	public void setBoredCounter(int boredCounter) {
+		this.boredCounter = boredCounter;
+	}
+
+	public int getBoredLimit() {
+		return boredLimit;
+	}
+
+	public void setBoredLimit(int boredLimit) {
+		this.boredLimit = boredLimit;
 	}
 
 }

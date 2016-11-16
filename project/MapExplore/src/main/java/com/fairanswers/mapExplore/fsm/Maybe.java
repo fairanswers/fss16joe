@@ -2,13 +2,22 @@ package com.fairanswers.mapExplore.fsm;
 
 public class Maybe extends Guard {
 
-	public Maybe(String name, State to) {
+	private double probability;
+
+	public Maybe(String name, State to, double likelihood) {
 		super(name, to);
+		this.probability = likelihood;
 	}
 
 	@Override
 	public boolean isTrue(){
-		return Model.getRandom() > .5;
+		return Model.getRandom() < probability;
 			
 	}
+
+	@Override
+	public String toString() {
+		return "Maybe [probability=" + probability + ", name=" + name + ", to=" + to + "]";
+	}
+	
 }

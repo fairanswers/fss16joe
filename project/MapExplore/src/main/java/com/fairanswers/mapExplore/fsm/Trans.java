@@ -4,12 +4,10 @@ public class Trans {
 
 	State from;
 	Guard guard;
-	State to;
 	
-	public Trans(State from, Guard guard, State to){
+	public Trans(State from, Guard guard){
 		this.from=from;
 		this.guard=guard;
-		this.to=to;
 	}
 
 	public State getFrom() {
@@ -28,12 +26,8 @@ public class Trans {
 		this.guard = guard;
 	}
 
-	public State getTo() {
-		return to;
+	@Override
+	public String toString() {
+		return "Trans [from=" + from + ", guard=" + guard + "]";
 	}
-
-	public void setTo(State to) {
-		this.to = to;
-	}
-	
 }

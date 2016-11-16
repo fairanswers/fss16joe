@@ -259,7 +259,7 @@ public class AgentTest {
 	@Test
 	public void testAgentBumpAndTurnBoring() {
 		agent.setName("testAgentBumpAndTurnBoring");
-		Agent.setRandomSeed(1L);
+		Model.setRandomSeed(1L);
 		agent.setDir(90);
 		System.out.println(map);
 		for (int i = 0; i < 500; i++) {
@@ -276,7 +276,7 @@ public class AgentTest {
 		map.agents.remove(0);
 		agent = new Agent("testAgentBumpAndTurnExciting", 1, 1, 10, .60, map);
 		map.agents.add(agent);
-		Agent.setRandomSeed(1L);
+		Model.setRandomSeed(1L);
 		agent.setDir(90);
 		System.out.println(map);
 		for (int i = 0; i < 500; i++) {
@@ -284,13 +284,11 @@ public class AgentTest {
 			System.out.println(map);
 		}
 		System.out.println(agent);
-		// assertEquals("Checking for agent at 0x1", Terrain.AGENT,
-		// map.getViewAt(0,1) );
 	}
 
 	@Test
 	public void testAgentCircle() {
-		Agent.setRandomSeed(1L);
+		Model.setRandomSeed(1L);
 		agent.setDir(0);
 		// Right
 		for (int i = 0; i < 8; i++) {

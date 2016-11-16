@@ -299,6 +299,10 @@ This may be a case where we are able to use state (FSM) to give precedence to on
 
 * * * Random generators have to be fed directly to the shuffle method, or it makes a new one.
 
+Wants
+* Explore - Continues to move toward unexplored areas
+* Bored - No new locations found in X ticks.  Pick a direction and go for y ticks.
+
 #Phase 8 - Format the output for analysis
 
 Separate executable with cmd line options for tests.

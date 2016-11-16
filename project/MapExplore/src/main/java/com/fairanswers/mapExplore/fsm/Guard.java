@@ -26,6 +26,11 @@ public abstract class Guard { //aka "Gaurd"
 	public void setTo(State to) {
 		this.to = to;
 	}
+
+	@Override
+	public String toString() {
+		return "Guard [name=" + name + ", to=" + to + "]";
+	}
 	
 	
 
