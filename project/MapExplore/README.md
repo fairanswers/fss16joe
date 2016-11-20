@@ -303,11 +303,75 @@ Wants
 * Explore - Continues to move toward unexplored areas
 * Bored - No new locations found in X ticks.  Pick a direction and go for y ticks.
 
+Before
+
+```
+Agent [name=a3, loc=Location [63.34, 52.14], dir=21.163216484098093, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=26.26%
+```
+
+After
+
+```
+Agent [name=a3, loc=Location [70.22, 17.40], dir=254.9134515343162, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=30.1%
+]
+
+```
+
+The difference this made was surprisingly small, even when I increased the bored walking to 100 ticks.  It's probably running into too may things (and changing direction at random) to make any difference.  A different map might solve that problem.
+
+
+Then I tried a different idea.  Keep going in the same direction when you're bored, don't just knock around into things.
+
+```
+Agent [name=a3, loc=Location [54.64, 52.78], dir=137.95832448076862, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=35.03%
+```
+
+This was better, but if I was already pointing towards the center I'd have to traverse the whole thing to get to a new spot.
+
+Third time's the charm: If bored, turn around and head the other direction.  This is the REO Speedwagon "Roll With The Changes" solution.
+
+```
+Agent [name=a3, loc=Location [71.89, 8.15], dir=264.57192723105356, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=32.16%
+```
+
+Finally, I decided to 
+1. Check the local area to make sure I'm not right next to an unknown.   If so, go that way.
+2. If not, check larger and larger areas to find the nearest unknowns.  Once I find one, go that way.
+3. If I've found all the locations, stop.  
+
+By checking map increments of 25%, I was able to get 53% complete
+
+```
+Agent [name=a3, loc=Location [39.65, 77.70], dir=358.7806039038538, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=53.74%
+```
+
+By checking map increments of 10%, I was able to get 56%, and the 
+```
+Agent [name=a3, loc=Location [83.30, 80.20], dir=72.56991953868334, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=56.71%
+```
+
+While setting up for testing multiple times, I found a variable that I was randomly resetting that determined how much the weight to the unknown affects the direction.  I don't remember why I put it in there, but when I took it out my test map coverage went to 76%
+
+```
+
+Agent [name=a3, loc=Location [48.94, 70.96], dir=91.44150746224801, speed=1.0, see=1.0, dirWiggle=30.0, chanceFwd=0.2, tick=10000, ter=
+Terrain:  Seed=0 variance=0.0 covered=76.74%
+```
+
+With these improvements, I am still able to run a map of 100x100 locations for 100000 ticks a thousand times in a minute.
 #Phase 8 - Format the output for analysis
 
 Separate executable with cmd line options for tests.
 
 Review all the variables and make them scriptable from cmd line.
+
+Script 1000 runs and run the stats.py on the output
 
 #Phase 9 - More optimizers
 

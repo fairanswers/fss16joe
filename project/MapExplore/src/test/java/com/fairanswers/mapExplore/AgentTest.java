@@ -27,7 +27,7 @@ public class AgentTest {
 		map = new Map(80, 10);
 		agent = new Agent("a2", 1, 1, 1, 1, map);
 		agent.setDir(0);
-		agent.setUnExploredWeight(0);
+		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
 	}
@@ -73,7 +73,7 @@ public class AgentTest {
 				//System.out.println(map);
 			}
 		}
-		System.out.println("* * * Reducing Wander");
+		//System.out.println("* * * Reducing Wander");
 		for (double wander = 1; wander >=0; wander = wander - .1) {
 			agent.setUnExploredWeight(wander);
 			for (int i = 0; i < 200; i++) {
@@ -86,19 +86,35 @@ public class AgentTest {
 	}
 
 	@Test
+	public void testMultipleBigMaps(){
+		for(int i=0; i < 1000; i++){
+			testBigMap();
+			if(i%100==0){
+				System.out.println(i);
+			}
+				
+		}
+	}
+	@Test
 	public void testBigMap() {
 		int multiplier = 100;
 		map = new Map(multiplier, multiplier);
 		map.setTerrain(new Terrain(map, 1.0, 1L) );
-		agent = new Agent("a3", 1, 1, 30, .2, map);
+		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
+		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
+		agent = new Agent("a3", 1, 1, 90, .9, map); //82.2
+		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
 		
-		for (int i = 0; i < 100*multiplier; i++) {
+		//for (int i = 0; i < 100*multiplier; i++) {
+		for (int i = 0; i < multiplier * multiplier; i++) {
 			map.tick();
-			if(map.getTick() % 100== 0 ){
-				System.out.println(map.getTick());
-				agent.setUnExploredWeight(Model.getRandom() * .5);
+			//System.out.println(map);
+			if(map.getTick() % 1000== 0 ){
+				//System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				//System.out.println(agent);
 				
 			}
 		}

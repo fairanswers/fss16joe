@@ -13,22 +13,26 @@ import com.fairanswers.mapExplore.fsm.Trans;
 public class Agent {
 	private static final String EXCITED = "EXCITED";
 	private static final String BORED = "BORED";
+	private static final String DONE = "DONE";
+	private static final Location ZERO_ZERO = new Location(0, 0);
 	String name; // UID
 	Location loc;
 	double speed = 1; // distance per tick
 	double dir = 0; // Heading
 	double see = 1; // Visibility
 	Terrain ter; // Known terrain
-	transient Map map; //Maps save agents.  infinite recursion on save.
+	transient Map map; // Maps save agents. infinite recursion on save.
 	double dirWiggle = 1;
 	private Double chanceFwd = .99;
-	int tick=0;
-	private double unExploredWeight=1;
+	int tick = 0;
+	private double unExploredWeight = 1;
 	private int boredCounter;
-	private int boredLimit = 20;
+	private int boredLimit = 100;
 	private Model model; // Can't json because of abstract guard and recursion
 	private State excitedState;
 	private State boredState;
+	private State doneState;
+	private double boredDirection;
 
 	public Agent() {
 	}
@@ -42,7 +46,8 @@ public class Agent {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
-		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same size
+		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same
+														// size
 		ter.setTerrain(x, y, map.getViewAt(x, y));
 		createModel();
 	}
@@ -53,8 +58,8 @@ public class Agent {
 		this.chanceFwd = chanceFwd;
 	}
 
-	public Agent(String name, double x2, double y2, double speed, double dir, double see,
-			double dirWiggle, Double chanceFwd, double unExploredWeight, Map map) {
+	public Agent(String name, double x2, double y2, double speed, double dir, double see, double dirWiggle,
+			Double chanceFwd, double unExploredWeight, Map map) {
 		this.name = name;
 		this.loc = new Location(x2, y2);
 		this.speed = speed;
@@ -69,12 +74,20 @@ public class Agent {
 	}
 
 	public double decideDir() {
-		double tmpDir = this.dir ;//Where we're currently headed
-				//+ dirToPOI() * weightOfPOI() //Dir to POI (if known)
-		double exploreDir =  unexploredDir();
-		exploreDir = subtractAngles(exploreDir, this.dir ) * getUnExploredWeight(); // Away from known places
-		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
-				
+		double tmpDir = this.dir;// Where we're currently headed
+		if(model.getHere()==excitedState){
+			double exploreDir = unexploredDir();
+			exploreDir = subtractAngles(exploreDir, this.dir) 
+					* getUnExploredWeight(); // Away from known places
+			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
+		}
+
+		if(model.getHere()==boredState){
+			//Keep moving in the direction we were going when we got bored.
+			double boredDir = subtractAngles(boredDirection, this.dir) 
+					* getUnExploredWeight(); 
+			tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+		}
 		// Mostly go forward
 		if (Model.getRandom() < chanceFwd) {
 			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
@@ -84,37 +97,58 @@ public class Agent {
 		}
 	}
 
-	//Returns positive or negative of difference.
+	// Returns positive or negative of difference.
 	public double subtractAngles(double first, double second) {
-//		if(second - first < 0){
-//			second += 360;
-//		}
 		double a = first - second;
 		a = getAbsoluteDegrees(a);
 		return a;
 	}
 
 	private double getAbsoluteDegrees(double a) {
-		a = ((a+180) % 360 ) -180;
-		if(a > 180)
+		a = ((a + 180) % 360) - 180;
+		if (a > 180)
 			a = a - 360;
-		if(a < -180)
+		if (a < -180)
 			a = a + 360;
 		return a;
 	}
 
+	// Behavior needs to change based on state
 	public int unexploredDir() {
 		Terrain t = getTer();
-		Location l = t.weight(loc, Terrain.UNKNOWN);
+		Location l = t.weightNeighborhood(loc, Terrain.UNKNOWN, see);
+		if (l.equals(0.0,0.0)) {
+			int range = t.getWid();
+			// Find if x or y is bigger
+			if (t.getLen() > t.getWid()) {
+				range = t.getLen();
+			}
+			// If no local spots, search wider: 
+			double increment = .1;
+			double pctMap = increment;
+			do {
+				l = t.weightNeighborhood(loc, Terrain.UNKNOWN, range * pctMap);
+				pctMap += increment;
+			} while (pctMap < 100.0 && l.equals(0.0, 0.0));
+		}
+		if(l.equals(0.0, 0.0) ){
+			System.out.println("Map Is Complete!");
+			alertMapIsComplete();
+		}
 		return dirFromWeight(l);
 	}
 
+	private void alertMapIsComplete() {
+
+		
+	}
+
 	public int dirFromWeight(Location l) {
-		if(l.equals(0,0)){
+		if (l.equals(0, 0)) {
 			return 0;
 		}
-		int d=  (int) Math.toDegrees(Math.atan2(l.getY(), l.getX() ) ) ;
-		if(d < 0)
+		int d = (int) Math.toDegrees(Math.atan2(l.getY(), l.getX()));
+		if (d < 0)
 			d = d + 360;
 		return d;
 	}
@@ -130,24 +164,25 @@ public class Agent {
 	private int dirToPOI() {
 		return 45;
 	}
-	
-	public void createModel(){
+
+	public void createModel() {
 		excitedState = new State(EXCITED, false);
 		boredState = new State(BORED, false);
+		doneState = new State(DONE, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(excitedState, new Always("BORING", boredState)) );
-		t.add(new Trans(boredState, new Always("EXCITING", excitedState)) );
+		t.add(new Trans(excitedState, new Always("BORING", boredState)));
+		t.add(new Trans(boredState, new Always("EXCITING", excitedState)));
 		model = new Model(t);
 	}
 
 	public void move(double dir, double speed) {
 		double xTravel = getXTravel(dir, speed);
 		double yTravel = getYTravel(dir, speed);
-		if (!map.isValid(loc.getX()+xTravel, loc.getY()+yTravel) ) {
+		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			setDir(turnRandom(90));
 			return;
 		}
-		if (map.isCliff(loc.getX()+xTravel, loc.getY()+yTravel) ) {
+		if (map.isCliff(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			setDir(turnRandom(90));
 			return;
 		}
@@ -164,15 +199,15 @@ public class Agent {
 	}
 
 	public double turnRight(double i) {
-		//System.out.println(" * * * RIGHT TURN");
-		setDir(dir - i );
+		// System.out.println(" * * * RIGHT TURN");
+		setDir(dir - i);
 		return this.dir;
 
 	}
 
 	public double turnLeft(double i) {
-		//System.out.println(" * * * LEFT TURN");
-		setDir( dir + i);
+		// System.out.println(" * * * LEFT TURN");
+		setDir(dir + i);
 		return dir;
 
 	}
@@ -191,24 +226,30 @@ public class Agent {
 		this.tick = tick;
 		move(decideDir(), speed);
 		int found = look(loc.getX(), loc.getY(), map);
-		if(found > 0){
+		checkState(found);
+
+	}
+
+	private void checkState(int found) {
+		if (found > 0) {
 			boredCounter = 0;
-			if(model.getHere()==boredState){
+			if (model.getHere() == boredState) {
 				model.setHere(excitedState);
 			}
-		}
-		else{
+		} else {
 			boredCounter++;
-			if(boredCounter > boredLimit){
+			if (boredCounter == boredLimit) {
 				model.setHere(boredState);
+				boredDirection = subtractAngles(dir,180);
 			}
 		}
+
 	}
 
 	public int look(double xCenter, double yCenter, Map map) {
 		int found = 0;
-		for (double y = yCenter - see; y <= yCenter + see; y=y+1.0) {
-			for (double x = xCenter - see; x <= xCenter + see; x=x+1.0) {
+		for (double y = yCenter - see; y <= yCenter + see; y = y + 1.0) {
+			for (double x = xCenter - see; x <= xCenter + see; x = x + 1.0) {
 				if (map.isValid(x, y)) {
 					if (ter.get(x, y).equals(ter.UNKNOWN)) {
 						found++;
@@ -219,19 +260,20 @@ public class Agent {
 		}
 		return found;
 	}
-	
+
 	public String toString(boolean brief) {
 		if (!brief)
 			return toString();
 		else
 			return "Agent [name=" + name + ", loc=" + loc + ", speed=" + Map.numFormat.format(speed) + ", dir="
-					+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see)+ "tick="+tick;
+					+ Map.numFormat.format(dir) + ", see=" + Map.numFormat.format(see) + "tick=" + tick;
 	}
 
 	@Override
 	public String toString() {
 		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + dir + ", speed=" + speed + ", see=" + see
-				+ ", dirWiggle=" + dirWiggle + ", chanceFwd=" + chanceFwd + ", tick=" + tick + ", ter=" +  map.end + ter +  map.end + "]";
+				+ ", dirWiggle=" + dirWiggle + ", chanceFwd=" + chanceFwd + ", tick=" + tick + ", ter=" + map.end + ter
+				+ map.end + "]";
 	}
 
 	////////////

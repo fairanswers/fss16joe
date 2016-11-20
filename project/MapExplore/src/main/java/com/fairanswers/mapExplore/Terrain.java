@@ -154,6 +154,21 @@ public class Terrain {
 		return weight;
 	}
 
+	public Location weightNeighborhood(Location loc, String item, double range) {
+		Location weight = new Location(0, 0);
+		for (double x = loc.getX()-range;  x <= loc.getX()+range; x++) {
+			for (double y = loc.getY()-range; y <= loc.getY()+range; y++) {
+				if (isValid(x,y) && item.equals(detail[(int) x][(int) y].getView())) {
+					// Add one if right of loc, subtract if left of loc
+					weight.setX(weight.getX()+compare(x, loc.getX()));
+					// Add one if above loc, subtract if below loc
+					weight.setY(weight.getY()+compare(y, loc.getY()));
+				}
+			}
+		}
+		return weight;
+	}
+
 	public double compare(double x1, double x2) {
 		if ((int) x1 == (int) x2) {
 			return 0;
@@ -166,7 +181,7 @@ public class Terrain {
 	}
 
 	public boolean isValid(double x, double y) {
-		if (x < 0.0 || y < 0.0) {
+		if (x < 0.0 || y < 0.0 || x > wid || y > len ) {
 			return false;
 		}
 		return isValid((int) x, (int) y);

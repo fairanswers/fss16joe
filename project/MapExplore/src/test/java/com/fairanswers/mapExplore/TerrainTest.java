@@ -40,7 +40,29 @@ public class TerrainTest {
 	
 
 	@Test
+	public void testWeightNeighborhood() {
+		Location here = new Location(0, 0);
+		Location next = tb.weightNeighborhood(here, Terrain.UNKNOWN, 1);
+		assertTrue(next.getX()==2.0 && next.getY()==2.0);
+		tb.setTerrain(0, 1, Terrain.PAVED);
+		next = tb.weightNeighborhood(here, Terrain.UNKNOWN, 1);
+		assertTrue(next.getX()==2.0 && next.getY()==1.0);
+		tb.setTerrain(0, 2, Terrain.PAVED);
+		tb.setTerrain(0, 3, Terrain.PAVED);
+		tb.setTerrain(0, 4, Terrain.PAVED);
+		next = tb.weightNeighborhood(here, Terrain.UNKNOWN, 5);
+		assertTrue(next.getX()==20.0 && next.getY()==16.0);
+		tb.setTerrain(2, 0, Terrain.PAVED);
+		tb.setTerrain(3, 0, Terrain.PAVED);
+		tb.setTerrain(4, 0, Terrain.PAVED);
+		next = tb.weightNeighborhood(here, Terrain.UNKNOWN, 5);
+		assertTrue(next.getX()==17.0 && next.getY()==16.0);
+		
+	}
+
+	@Test
 	public void testCoverage() {
+		//Tries two different maps
 		double cov = tb.getCoverage();
 		assertTrue("blank", cov == 0);
 		tb.setTerrain(1, 2, Terrain.CLIFF);
