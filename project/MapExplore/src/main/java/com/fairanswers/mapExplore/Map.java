@@ -30,6 +30,7 @@ public class Map {
 	private int tick=0;
 	public final String end = System.getProperty("line.separator");
 	public static final DecimalFormat numFormat = new DecimalFormat("#.00");	
+	public boolean complete=false;
 	
 	public Map(int wid, int len){
 		this.wid = wid;
@@ -178,6 +179,14 @@ public class Map {
 		String str = gson.toJson(this);
 		FileUtils.writeStringToFile(FileUtils.getFile(filename), str, "UTF-8");
 		
+	}
+
+	public boolean isComplete() {
+		return complete;
+	}
+
+	public void setComplete(boolean complete) {
+		this.complete = complete;
 	}
 	
 }

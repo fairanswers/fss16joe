@@ -46,8 +46,10 @@ public class Agent {
 		this.name = name;
 		this.loc = new Location(x, y);
 		this.map = map;
-		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same
-														// size
+		this.ter = new Terrain(map, Terrain.UNKNOWN);// Gets blank copy same size
+		if(!ter.isValid(x, y)){
+			throw new RuntimeException("Can not set x,y to "+x+","+y);
+		}
 		ter.setTerrain(x, y, map.getViewAt(x, y));
 		createModel();
 	}

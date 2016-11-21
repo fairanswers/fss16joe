@@ -12,6 +12,7 @@ import org.uma.jmetal.operator.SelectionOperator;
 import org.uma.jmetal.operator.impl.crossover.SBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.PolynomialMutation;
 import org.uma.jmetal.operator.impl.selection.BinaryTournamentSelection;
+import org.uma.jmetal.operator.impl.selection.TournamentSelection;
 import org.uma.jmetal.problem.Problem;
 import org.uma.jmetal.runner.AbstractAlgorithmRunner;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -25,12 +26,12 @@ import org.uma.jmetal.util.fileoutput.impl.DefaultFileOutputContext;
 import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 
 public class Runner extends AbstractAlgorithmRunner {
-	String problemName = "org.uma.jmetal.problem.multiobjective.zdt.ZDT1";
+	String problemName = "com.fairanswers.mapExplore.optimizers.MapExploreProblem";
 
 	public static void main(String[] args) throws JMetalException, FileNotFoundException {
 		Runner run = new Runner();
-		run.random();
-		//run.nsgii();
+		//run.random();
+		run.nsgii();
 	}
 
 	public void nsgii() throws JMetalException, FileNotFoundException {
@@ -51,11 +52,12 @@ public class Runner extends AbstractAlgorithmRunner {
 		double mutationDistributionIndex = 20.0;
 		mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
 
-		selection = new BinaryTournamentSelection<DoubleSolution>(
-				new RankingAndCrowdingDistanceComparator<DoubleSolution>());
+		
+		selection = new TournamentSelection<DoubleSolution>(
+				new RankingAndCrowdingDistanceComparator<DoubleSolution>(), 5);
 
 		algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation).setSelectionOperator(selection)
-				.setMaxEvaluations(25000).setPopulationSize(100).build();
+				.setMaxEvaluations(100).setPopulationSize(10).build();
 
 		AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();
 
