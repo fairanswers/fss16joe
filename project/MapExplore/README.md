@@ -364,18 +364,15 @@ Agent [name=a3, loc=Location [48.94, 70.96], dir=91.44150746224801, speed=1.0, s
 Terrain:  Seed=0 variance=0.0 covered=76.74%
 ```
 
-With these improvements, I am still able to run a map of 100x100 locations for 100000 ticks a thousand times in a minute.
+With these improvements, I am still able to run a map of 100x100 locations for 10000 ticks a thousand times in a minute.
 #Phase 8 - Format the output for analysis
+done 11/20
+I thought about creating a separate executable with cmd line options for tests.  But I decided to use a Study instead, which will run all the evaluations and do some analysis.  After a lot of work I went back to a Runner, which does single thread, single problems.  Will revisit soon.  Plus, it seems to be a lot slower.  I may need to fix that.
 
-Separate executable with cmd line options for tests.
-
-Review all the variables and make them scriptable from cmd line.
-
-Script 1000 runs and run the stats.py on the output
 
 #Phase 9 - More optimizers
 
-Get SA and PSO working 
+Get Random and NSGAII working.
 
 Research bleeding edge options (oversample/down select)
 
@@ -391,6 +388,7 @@ Happy
 * Lazy - Only take the easiest paths
 * Board - Haven't seen a new on in a while.  Find the nearest and go to it. (Travel-to-point).  If you can't get there, give up after a while (state=dead) and try again.  Search by quarter, half, and all.
 
+?Increate likelyhood of walls by doing a grid like on unbox, where each value increases the likelyhood of walls.  YOu can do vertical, horizontal, diagonal.
 
 ?Add water, which can be flowing.  Look at http://unbox.org/open/trunk/472/14/spring/doc/games.md 
 
@@ -400,9 +398,7 @@ Happy
 
 ?Bomb dog- don't step on the bombs
 
-?MIA Rescue - Find known number MIAs
+?MIA Rescue - Find known number MIAs to end simulation early.  Using maps of X by Y and ticks of X*Y, I've only been able to get completion in the mid 80s.
 
 ?Active Shoter - must stay behind hill.  Hear shots to estimate location.  Figure out how to stay behind cover.
-
-?Take friction into account when planning routes.
 

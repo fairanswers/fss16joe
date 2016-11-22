@@ -55,7 +55,7 @@ public class MapTest {
 	public void testTerrainVaried(){
 		Model.setRandomSeed(1L);
 		Map map = new Map(10,4);
-		Terrain t = new Terrain(map, 1.0, 1L);
+		Terrain t = new Terrain(map, 1.0);
 		map.setTerrain(t);
 		System.out.println(t);
 	}
@@ -63,7 +63,7 @@ public class MapTest {
 	@Test
 	public void testTerrainBoring(){
 		Map map = new Map(10,4);
-		Terrain t = new Terrain(map, 10, 1L);
+		Terrain t = new Terrain(map, 10);
 		map.setTerrain(t);
 		System.out.println(map);
 		System.out.println(t);

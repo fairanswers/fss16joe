@@ -32,7 +32,7 @@ public class Terrain {
 	int wid;
 	int len;
 	GridSquare[][] detail;
-	private long seed;
+//	private long seed;
 	private double varianceFactor;
 
 	public Terrain(Map map) {
@@ -217,10 +217,10 @@ public class Terrain {
 	// otherwise, paved
 	//
 	// TODO Can also use an array to determine probabilities.
-	public Terrain(Map map, double factor, long seed) {
-		this.seed = seed;
+	public Terrain(Map map, double factor) {
+		//this.seed = seed;
 		this.varianceFactor = factor;
-		Model.setRandomSeed(seed);
+		//Model.setRandomSeed(seed);
 		this.wid = map.getWid();
 		this.len = map.getLen();
 		detail = new GridSquare[wid][len];
@@ -270,7 +270,7 @@ public class Terrain {
 
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Terrain:  Seed=" + seed + " variance=" + getVarianceFactor() + " covered=" + getCoverage() + "%"+ end);
+		sb.append("Terrain: variance=" + getVarianceFactor() + " covered=" + getCoverage() + "%"+ end);
 		sb.append(TERRAIN_CORNER);
 		for (int x = 0; x < wid; x++) {
 			sb.append(x % 10);
@@ -320,14 +320,6 @@ public class Terrain {
 
 	public void setGridSquare(GridSquare[][] detail) {
 		this.detail = detail;
-	}
-
-	public long getSeed() {
-		return seed;
-	}
-
-	public void setSeed(long seed) {
-		this.seed = seed;
 	}
 
 	public void setDetail(GridSquare[][] detail) {

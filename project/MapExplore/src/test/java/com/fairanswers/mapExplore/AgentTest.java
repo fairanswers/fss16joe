@@ -76,7 +76,7 @@ public class AgentTest {
 		//System.out.println("* * * Reducing Wander");
 		for (double wander = 1; wander >=0; wander = wander - .1) {
 			agent.setUnExploredWeight(wander);
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < 20; i++) {
 				map.tick();
 				//System.out.println(map);
 			}
@@ -85,21 +85,21 @@ public class AgentTest {
 		System.out.println(map);
 	}
 
-	@Test
-	public void testMultipleBigMaps(){
-		for(int i=0; i < 1000; i++){
-			testBigMap();
-			if(i%100==0){
-				System.out.println(i);
-			}
-				
-		}
-	}
+//	@Test
+//	public void testMultipleBigMaps(){
+//		for(int i=0; i < 1000; i++){
+//			testBigMap();
+//			if(i%100==0){
+//				System.out.println(i);
+//			}
+//				
+//		}
+//	}
 	@Test
 	public void testBigMap() {
 		int multiplier = 100;
 		map = new Map(multiplier, multiplier);
-		map.setTerrain(new Terrain(map, 1.0, 1L) );
+		map.setTerrain(new Terrain(map, 1.0) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
 		agent = new Agent("a3", 1, 1, 90, .9, map); //82.2
@@ -126,7 +126,7 @@ public class AgentTest {
 	public void test2Agents() {
 		int multiplier = 10;
 		map = new Map(10*multiplier, 10*multiplier);
-		map.setTerrain(new Terrain(map, 1.0, 1L) );
+		map.setTerrain(new Terrain(map, 1.0) );
 		Agent a = new Agent("a", 0, 0, 30, .2, map);
 		Agent b = new Agent("b", map.getWid()-1, map.getLen()-1, 30, .2, map);
 		b.setTer(a.getTer());
@@ -205,7 +205,7 @@ public class AgentTest {
 	public void testAllAgentsSettings() {
 		int multiplier = 10;
 		map = new Map(10*multiplier, 10*multiplier);
-		map.setTerrain(new Terrain(map, 1.0, 1L) );
+		map.setTerrain(new Terrain(map, 1.0) );
 		Agent a = new Agent("a", 1, 2, 1, 0, 3, 10, .9, 1, map);
 		map.getAgents().add(a);
 		Model.setRandomSeed(1L);
@@ -306,6 +306,7 @@ public class AgentTest {
 	public void testAgentCircle() {
 		Model.setRandomSeed(1L);
 		agent.setDir(0);
+		agent.setUnExploredWeight(0);
 		// Right
 		for (int i = 0; i < 8; i++) {
 			map.tick();
