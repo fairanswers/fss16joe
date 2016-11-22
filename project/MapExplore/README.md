@@ -372,12 +372,49 @@ I thought about creating a separate executable with cmd line options for tests. 
 
 #Phase 9 - More optimizers
 
-Get Random and NSGAII working.
+Get DE and NSGAII working.
 
 Research bleeding edge options (oversample/down select)
 
+The first big test was for nsgii and de, it ran overnight.  Output looks like this
 
+rank ,         name ,    med   ,  iqr 
+----------------------------------------------------
+   1 , CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed9443 ,    -90   ,    2 (         ---  *|  ---         ),-91.76, -91.19, -90.78, -90.00, -89.42
+   1 , CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed7377 ,    -90   ,    0 (        ------ *  -           ),-91.84, -90.79, -90.53, -90.06, -89.80
+   1 , CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed3565 ,    -90   ,    1 (          ---- *  ----        ),-91.47, -90.82, -90.52, -90.06, -89.28
+   1 , CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed1901 ,    -90   ,    2 (        -----  |* ---         ),-91.85, -90.98, -90.42, -90.07, -89.35
+
+rank ,         name ,    med   ,  iqr 
+----------------------------------------------------
+   1 ,       NSGIIg ,    -91   ,    1 (       ----  * | ----         ),-92.29, -91.62, -91.31, -90.71, -90.08
+   1 ,       NSGIIh ,    -91   ,    1 (       ----  * | ----         ),-92.29, -91.62, -91.31, -90.71, -90.08
+   1 ,       NSGIId ,    -91   ,    1 (        ---   *|---           ),-92.11, -91.62, -91.27, -90.89, -90.33
+   1 ,       NSGIIb ,    -91   ,    1 (        ---   *|-----         ),-92.22, -91.62, -91.22, -90.86, -90.10
+   1 ,       NSGIIc ,    -91   ,    1 (         ---  *|----          ),-92.06, -91.57, -91.22, -90.89, -90.32
+   1 ,        NSGII ,    -91   ,    1 (       -----  *| ----         ),-92.26, -91.51, -91.18, -90.79, -90.01
+   1 ,       NSGIIa ,    -91   ,    1 (       -----  *| ----         ),-92.26, -91.51, -91.18, -90.79, -90.01
+   1 ,       NSGIIe ,    -91   ,    1 (          --  *| ----         ),-91.84, -91.47, -91.17, -90.74, -90.13
+   1 ,       NSGIIf ,    -91   ,    1 (          --  *| ----         ),-91.84, -91.47, -91.17, -90.74, -90.13
+   
+   
+Runs were taking in the 2 hour range for DE.  NSGII is still running, but apparently in parallell !?!
+
+C:\apps\ase16\fss16joe\project\MapExplore>ls -lrt *jdat
+-rw-rw-rw-   1 user     group         415 Nov 22 02:00 CoverageDE.1479789695038.1479798000460.jdat
+-rw-rw-rw-   1 user     group         418 Nov 22 04:20 CoverageDE.1479789695038.1479806441821.jdat
+-rw-rw-rw-   1 user     group         417 Nov 22 06:39 CoverageDE.1479789695038.1479814778676.jdat
+-rw-rw-rw-   1 user     group         413 Nov 22 09:03 CoverageDE.1479789695038.1479823415500.jdat
+-rw-rw-rw-   1 user     group         356 Nov 22 10:12 NSGII.1479789695038.1479796534934.jdat
+-rw-rw-rw-   1 user     group         356 Nov 22 10:13 NSGII.1479789695038.1479804979213.jdat
+-rw-rw-rw-   1 user     group         354 Nov 22 10:13 NSGII.1479789695038.1479813322938.jdat
+-rw-rw-rw-   1 user     group         356 Nov 22 10:13 NSGII.1479789695038.1479821938145.jdat
+   
+cat CoverageDE.1479789695038.1479798000460.jdat   
+CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed9443 -90.86 -90.77 -91.17 -90.72 -91.26 -91.96 -92.37 -91.05 -89.59 -90.0 -91.76 -89.8 -89.8 -91.44 -89.94 -89.86 -90.45 -89.42 -89.71 -90.36 -90.95 -91.26 -89.5 -90.86 -92.66 -93.18 -91.19 -90.88 -91.26 -91.15 -90.78 -91.63 -90.21 -88.92 -91.41 -90.58 -90.48 -90.32 -89.73 -91.0 -90.1 -89.69 -91.59 -91.12 -89.32 -91.33 -93.52 -89.23 -91.55 -88.39
  
+cat NSGII.1479789695038.1479796534934.jdat
+NSGIIa -91.86 -92.25 -90.94 -90.97 -91.22 -92.68 -90.69 -90.07 -91.2 -91.67 -91.91 -92.42 -91.92 -91.49 -92.36 -90.71 -90.81 -91.28 -90.25 -91.79 -90.52 -89.81 -90.95 -91.23 -90.22 -90.34 -92.26 -91.32 -91.97 -91.51 -89.8 -92.55 -91.65 -88.72 -90.86 -91.18 -91.07 -91.71 -91.21 -90.03 -91.4 -90.85 -91.26 -90.12 -90.86 -93.01 -91.02 -90.01 -90.79 -90.01
 #Future
 
 States
