@@ -33,6 +33,8 @@ public class Agent {
 	private State boredState;
 	private State doneState;
 	private double boredDirection;
+	private double energy;
+	private boolean complete=false;
 
 	public Agent() {
 	}
@@ -141,8 +143,7 @@ public class Agent {
 	}
 
 	private void alertMapIsComplete() {
-
-		
+		this.complete = true;
 	}
 
 	public int dirFromWeight(Location l) {
@@ -226,9 +227,12 @@ public class Agent {
 
 	public void tick(int tick) {
 		this.tick = tick;
-		move(decideDir(), speed);
-		int found = look(loc.getX(), loc.getY(), map);
-		checkState(found);
+		if(!complete){
+			move(decideDir(), speed);
+			int found = look(loc.getX(), loc.getY(), map);
+			energy += ter.getFriction(loc.getX(), loc.getY());
+			checkState(found);
+		}
 
 	}
 
@@ -392,6 +396,22 @@ public class Agent {
 
 	public void setBoredLimit(int boredLimit) {
 		this.boredLimit = boredLimit;
+	}
+
+	public double getBoredDirection() {
+		return boredDirection;
+	}
+
+	public void setBoredDirection(double boredDirection) {
+		this.boredDirection = boredDirection;
+	}
+
+	public double getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(double energy) {
+		this.energy = energy;
 	}
 
 }

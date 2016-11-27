@@ -415,6 +415,21 @@ CoverageDE.cr=0.5_f=0.5_variant=rand/1/bin_pop=30_evals=250_seed9443 -90.86 -90.
  
 cat NSGII.1479789695038.1479796534934.jdat
 NSGIIa -91.86 -92.25 -90.94 -90.97 -91.22 -92.68 -90.69 -90.07 -91.2 -91.67 -91.91 -92.42 -91.92 -91.49 -92.36 -90.71 -90.81 -91.28 -90.25 -91.79 -90.52 -89.81 -90.95 -91.23 -90.22 -90.34 -92.26 -91.32 -91.97 -91.51 -89.8 -92.55 -91.65 -88.72 -90.86 -91.18 -91.07 -91.71 -91.21 -90.03 -91.4 -90.85 -91.26 -90.12 -90.86 -93.01 -91.02 -90.01 -90.79 -90.01
+
+#Phase 10 Energy Consumption
+Modify behavior so energy consumption is taken into account.
+* Agents track energy consumption.  Done.
+* Maps aggregate energy consumption. Done.
+* Opts. consider percent complete with energy consumption.
+* Display beginning and end Pareto plot.
+* Better function to minimize energy - Agent variable that decides how lazy to be.
+* Consider whether chanceFwd is worthwhile. Can take it out?.
+* Run fewer iterations - data too similar
+* DE is 10 times decisions - 100-1000
+* Instead of random terrain, use the surrounding terrain to decide.
+* Find scholarly articles.
+
+
 #Future
 
 States
@@ -438,4 +453,51 @@ Happy
 ?MIA Rescue - Find known number MIAs to end simulation early.  Using maps of X by Y and ticks of X*Y, I've only been able to get completion in the mid 80s.
 
 ?Active Shoter - must stay behind hill.  Hear shots to estimate location.  Figure out how to stay behind cover.
+
+#ASE Presentation Draft
+
+Tell and show - 
+ Tell in Title
+ Show in graphic (Picture or graph)
+
+Cropping is good.
+Image on Right Side, Text on Left
+Make picture whole slide.  Put text on semi-transparent
+Text Upper Left, Image lower right, no background image.
+Use images with a different style.
+No clip art.
+
+Image Ideas
+Indiana Jones
+Pirates
+X marks the spot
+Robots from the future
+Lost
+Asking for directions
+Bored
+Happy 
+Bored to death
+Wandering
+Agents (Secrect)
+
+Presentation Outline
+When I first came to NC State I learned about and drone made from a big model airplane.  It takes off, finds things within an area, and lands, all by itself. That stuck with me, because it's the kind of problem that you can think about on your own, but you can also get luck at, so having experience may not always be an advantage.
+
+My project is to make a map and a agent to drive around on it. It's a land-based dron with different characteristics (lazy, bored, patient) that we can set, then let it run around.  We take the same agent and see how much it explores.
+
+Maps
+[Show diagram of map and key for terrains]
+The maps are 100 units by 100 units, and each drone has 100 * 100 = 10,000 moves to explore it.  Each map has terrain that has different friction amounts, paved is easy to travel, grass is harder, slopes are harder, and cliffs are impossible.  If you hit a cliff (or an edge) turn right or left 90 degress and start again.
+
+Agents
+[Show diagram of early version terrain vs later version]
+The agest start a 'run' of experiments at a random location with the same set of variables:  Momentum, Chance Forward, Direction Wiggle, Lazyness.  He can also have states of Happy, Bored, and Lazy.
+
+Happy agents are finding new territory.  That's their goal, to explore the map, so as long as they are doing that, they are happy.  If they don't find anything for a while, they get bored and change their behavior.  They stop what they are doing and think about where they want to go.  They start with the closest 10% of the map and see if there are any unknown places there.  If so, great!  They head that way.  If not, they check the next 10%, and the next, until they check the whole map.  If there are no unknowns, the map is complete.
+
+If they find an unknown but it takes too long to get there, they die of bordem.  This is effectively early termination for an agent that just isn't doing well.
+
+Taboo Search
+
+Results
 

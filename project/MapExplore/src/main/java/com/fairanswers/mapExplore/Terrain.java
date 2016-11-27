@@ -12,22 +12,24 @@ import com.fairanswers.mapExplore.fsm.Model;
 
 public class Terrain {
 	public final static String UNKNOWN = " ";
-	public final static double UNKNOWN_WT = -1;
+	public final static double UNKNOWN_WT = 0;
 	public final static String DEFAULT = ".";
-	public final static double DEFAULT_WT = -1;
+	public final static double DEFAULT_WT = 1;
 	public final static String AGENT = "A";
 	private static final String TERRAIN_CORNER = "T";
 	public final String end = System.getProperty("line.separator");
 
 	HashMap<String, Double> weight = new HashMap<>();
 	public final static String PAVED = ".";
-	public final static double PAVED_WT = 100;
+	public final static double PAVED_WT = 1;
 	public final static String GRASS = ",";
-	public final static double GRASS_WT = 50;
+	public final static double GRASS_WT = 5;
 	public final static String SLOPE = "o";
 	public final static double SLOPE_WT = 25;
 	public final static String CLIFF = "X";
-	public final static double CLIFF_WT = 0;
+	public final static double CLIFF_WT = 100;
+	public static final String INITIAL = "I";
+	public static final String PARETO = "*";
 
 	int wid;
 	int len;
@@ -114,7 +116,8 @@ public class Terrain {
 		weight.put(SLOPE, SLOPE_WT);
 		weight.put(CLIFF, CLIFF_WT);
 		weight.put(UNKNOWN, UNKNOWN_WT);
-		weight.put(DEFAULT, DEFAULT_WT);
+		weight.put(INITIAL, UNKNOWN_WT);
+		weight.put(PARETO, UNKNOWN_WT);
 		this.wid = map.getWid();
 		this.len = map.getLen();
 		detail = new GridSquare[wid][len];
@@ -228,13 +231,13 @@ public class Terrain {
 			for (int y = 0; y < len; y++) {
 				Double rand = Model.getRandom() * factor;
 				if (rand < .1) {
-					detail[x][y] = new GridSquare(CLIFF,  1);
+					detail[x][y] = new GridSquare(CLIFF, CLIFF_WT);
 				} else if (rand < .3) {
-					detail[x][y] = new GridSquare(SLOPE, .8);
+					detail[x][y] = new GridSquare(SLOPE, SLOPE_WT);
 				} else if (rand < .5) {
-					detail[x][y] = new GridSquare(GRASS, .3);
+					detail[x][y] = new GridSquare(GRASS, GRASS_WT);
 				} else {
-					detail[x][y] = new GridSquare(PAVED, .1);
+					detail[x][y] = new GridSquare(PAVED, PAVED_WT);
 				}
 			}
 		}
@@ -262,6 +265,7 @@ public class Terrain {
 
 	public void setTerrain(int x, int y, String terrainAt) {
 		detail[x][y].setView(terrainAt);
+		detail[x][y].setFriction(weight.get(terrainAt));
 	}
 
 	public void setTerrain(double x, double y, String terrainAt) {
@@ -344,6 +348,10 @@ public class Terrain {
 
 	public String getEnd() {
 		return end;
+	}
+
+	public double getFriction(double x, double y) {
+		return detail[(int) x][(int) y].getFriction();
 	}
 
 }

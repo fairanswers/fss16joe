@@ -1,6 +1,7 @@
 package com.fairanswers.mapExplore.optimizers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.uma.jmetal.problem.DoubleProblem;
@@ -18,8 +19,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		super();
 		// Variables x, y, dirWiggle, chanceFwd, ticks, Hevily populated map , seed
 	    setNumberOfVariables(4);
-	    setNumberOfObjectives(1);
-	    //setNumberOfConstraints(0);
+	    setNumberOfObjectives(2);
 	    setName("MapExplore");
 
 	    List<Double> lowerLimit = new ArrayList<>(getNumberOfVariables()) ;
@@ -33,8 +33,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 	    upperLimit.add(180.0);		// dirWiggle
 	    lowerLimit.add(0.0);		// chanceFwd
 	    upperLimit.add(1.0);		// chanceFwd
-	    //TerrainSeed
-
+	    //TerrainSeed?
 	    setLowerLimit(lowerLimit);
 	    setUpperLimit(upperLimit);
 	}
@@ -53,19 +52,55 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 			//System.out.println(i);
 			map.tick();
 			//Check for completes
-			if(agent.getTer().getCoverage() > 99.999){
-				solution.setObjective(0, 0-agent.getTer().getCoverage() );
-				System.out.println("Finished with percent = "+(0-agent.getTer().getCoverage() ) );
+			if(agent.getTer().getCoverage() < -99.9 ){ //Check for finished
+				finish(solution, agent);
 				return;
 			}
 		}
-		solution.setObjective(0, 0-agent.getTer().getCoverage() );
-		System.out.println("Finished with percent = "+(0-agent.getTer().getCoverage() ) );
-		//System.out.println(agent);
+		finish(solution, agent);
+	}
+
+	private void finish(DoubleSolution solution, Agent agent) {
+		double cov = 100-agent.getTer().getCoverage() ;
+		solution.setObjective(0, cov);
+		double energy =agent.getEnergy()/1000;
+		solution.setObjective(1, energy);
+		System.out.println("Finished with percent = "+cov+" Energy = "+energy +" at "+new Date() );
 	}
 
 	public static MapExploreProblem create(int seed) {
 		Model.setRandomSeed(seed);
 		return new MapExploreProblem();
+	}
+
+	public static String generateParetofront(List<DoubleSolution> init, List<DoubleSolution> pop) {
+		Map map = new Map(100, 100);
+		Terrain t = new Terrain(map, Terrain.UNKNOWN);
+		for(int i=0; i< init.size(); i++){
+			double unknown = init.get(i).getObjective(0);
+			double energy = init.get(i).getObjective(1);
+			if(unknown > 99){
+				unknown = 99;
+			}
+			if( energy > 99){
+				energy = 99;
+			}
+			t.setTerrain(unknown, energy, Terrain.INITIAL);
+		}
+		for(int i=0; i< pop.size(); i++){
+			double unknown = pop.get(i).getObjective(0);
+			double energy = pop.get(i).getObjective(1);
+			if(unknown > 99){
+				unknown = 99;
+			}
+			if( energy > 99){
+				energy = 99;
+			}
+			if( energy < 0 ){
+				energy = 0;
+			}
+			t.setTerrain(unknown, energy, Terrain.PARETO);
+		}
+		return t.toString();
 	}
 }

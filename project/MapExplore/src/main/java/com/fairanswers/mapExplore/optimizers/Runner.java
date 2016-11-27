@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.io.FileUtils;
 import org.uma.jmetal.algorithm.Algorithm;
@@ -40,144 +42,85 @@ import org.uma.jmetal.util.pseudorandom.JMetalRandom;
 import com.fairanswers.mapExplore.fsm.Model;
 
 public class Runner extends AbstractAlgorithmRunner {
-	private static final int RUNS = 50;
-	private static final int ITERATIONS = 50;
-	private static final int POPULATION = 30;
-	private static final int EVALS = 250;
+	private static int ITERATIONS;
+	private static int POPULATION;
+	private static int EVALS;
+	private static int THREADS;
 	String problemName = "com.fairanswers.mapExplore.optimizers.MapExploreProblem";
 	String startTime = ""+new Date().getTime();
 
 	public static void main(String[] args) throws JMetalException, IOException {
+		long mainStart = new Date().getTime();
+		// SmallRuns
+		if(true){
+			ITERATIONS=1;
+			POPULATION=50; //Must be even for DE
+			EVALS=300;
+			THREADS=8;
+		}
 		Runner run = new Runner();
 		for(int i=0; i < ITERATIONS; i++){
-			System.out.println("Starting iteration"+i);
+			System.out.println("Starting iteration"+i+" pop="+ POPULATION+ " evals=" +EVALS);
 			run.nsgii();
-			run.de();
+			//run.de();
 			
 		}
 		//run.random();
 		//run.nsgii();
 		//run.de();
+		System.out.println("* * * End maintime ="+new Date().getTime() +" elaspsed mainTime ="+(new Date().getTime() - mainStart )/1000);
+	}
+
+	public void nsgii() throws JMetalException, IOException {
+		long nsgiiTime = new Date().getTime();
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
+        for (int i = 0; i < THREADS; i++) 
+        {
+            System.out.println("Starting NSGIIProblem #" + i);
+    		NSGIIProblem prob = new NSGIIProblem();
+    	    prob.setEvals(EVALS);
+    	    prob.setPopulation(POPULATION);
+    	    prob.setStartTime(startTime);
+    	    prob.setRunner(this);
+            executor.execute(prob);
+        }
+        System.out.println("Maximum threads inside pool " + executor.getMaximumPoolSize());
+        executor.shutdown();
+		System.out.println("* * * End nsgiitime ="+new Date().getTime() +" elaspsed nsgiiTime ="+(new Date().getTime() - nsgiiTime )/1000);
 	}
 
 	private void de() throws IOException {
-	    DoubleProblem problem;
-	    Algorithm<DoubleSolution> algorithm;
-	    DifferentialEvolutionSelection selection;
-	    DifferentialEvolutionCrossover crossover;
-	    SolutionListEvaluator<DoubleSolution> evaluator ;
+		long deTime = new Date().getTime();
+		ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
+        for (int i = 0; i < THREADS; i++) 
+        {
+            System.out.println("Starting DEProblem #" + i);
+    		DEProblem prob = new DEProblem();
+    	    prob.setEvals(EVALS);
+    	    prob.setPopulation(POPULATION);
+    	    prob.setStartTime(startTime);
+    	    prob.setRunner(this);
+            executor.execute(prob);
+        }
+        System.out.println("Maximum threads inside pool " + executor.getMaximumPoolSize());
+        executor.shutdown();
+        System.out.println("DE Finised at "+new Date().getTime() );
+		System.out.println("* * * End detime ="+new Date().getTime() +" elaspsed deTime ="+(new Date().getTime() - deTime )/1000);
 
-	    double cr = .5;
-	    double f = .5;
-	    String variant = "rand/1/bin";
-	    int seed = Model.getRandomIntRange(0, 10000);
-	    		
-	    problem = MapExploreProblem.create(seed);
-
-	    int numberOfCores =8;
-
-	    if (numberOfCores == 1) {
-	      evaluator = new SequentialSolutionListEvaluator<DoubleSolution>() ;
-	    } else {
-	      evaluator = new MultithreadedSolutionListEvaluator<DoubleSolution>(numberOfCores, problem) ;
-	    }
-
-	    crossover = new DifferentialEvolutionCrossover(cr,f,variant) ;
-	    selection = new DifferentialEvolutionSelection();
-
-	    algorithm = new DifferentialEvolutionBuilder(problem)
-	        .setCrossover(crossover)
-	        .setSelection(selection)
-	        .setSolutionListEvaluator(evaluator)
-	        .setMaxEvaluations(EVALS)
-	        .setPopulationSize(POPULATION)
-	        .build() ;
-
-	    ArrayList<String> results = new ArrayList<>();
-		results.add("CoverageDE.cr="+cr+"_f="+f+"_variant="+variant+"_pop="+POPULATION+"_evals="+EVALS+"_seed"+seed );
-	    for(int i=0; i< RUNS; i++){
-		    AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
-			        .execute() ;
-			    DoubleSolution solution = algorithm.getResult() ;
-			    results.add(Double.toString(solution.getObjective(0) ) );
-	    }
-	    report("CoverageDE", startTime, results);
-//	    long computingTime = algorithmRunner.getComputingTime() ;
-//
-//	    List<DoubleSolution> population = new ArrayList<>(1) ;
-//	    population.add(solution) ;
-//	    new SolutionListOutput(population)
-//	        .setSeparator("\t")
-//	        .setVarFileOutputContext(new DefaultFileOutputContext("VAR.tsv"))
-//	        .setFunFileOutputContext(new DefaultFileOutputContext("FUN.tsv"))
-//	        .print();
-//
-//	    JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
-//	    JMetalLogger.logger.info("Objectives values have been written to file FUN.tsv");
-//	    JMetalLogger.logger.info("Variables values have been written to file VAR.tsv");
-
-	    evaluator.shutdown();
-		
 	}
 
-	private String report(String optType, String startHack, ArrayList<String> results) throws IOException {
+
+	public String report(String optType, String startHack, ArrayList<String> results) throws IOException {
 		StringBuffer sb = new StringBuffer();
 		for(int i=0; i< results.size(); i++){
 			sb.append(results.get(i) );
 			sb.append(" ");
 		}
 		sb.append("\r\n");
-		File f = new File(optType+"."+startHack+"."+new Date().getTime()+".jdat" );
+		File f = new File("tmp/"+optType+"."+startHack+"."+new Date().getTime()+".jdat" );
 		FileUtils.writeStringToFile(f, sb.toString() );
 		System.out.println(sb.toString() );
 		return sb.toString();
-	}
-
-	public void nsgii() throws JMetalException, IOException {
-		Problem<DoubleSolution> problem;
-		Algorithm<List<DoubleSolution>> algorithm;
-		CrossoverOperator<DoubleSolution> crossover;
-		MutationOperator<DoubleSolution> mutation;
-		SelectionOperator<List<DoubleSolution>, DoubleSolution> selection;
-		String referenceParetoFront = "";
-
-		problem = ProblemUtils.<DoubleSolution>loadProblem(problemName);
-
-		double crossoverProbability = 0.9;
-		double crossoverDistributionIndex = 20.0;
-		crossover = new SBXCrossover(crossoverProbability, crossoverDistributionIndex);
-
-		double mutationProbability = 1.0 / problem.getNumberOfVariables();
-		double mutationDistributionIndex = 20.0;
-		mutation = new PolynomialMutation(mutationProbability, mutationDistributionIndex);
-
-		
-		selection = new TournamentSelection<DoubleSolution>(
-				new RankingAndCrowdingDistanceComparator<DoubleSolution>(), 5);
-
-		algorithm = new NSGAIIBuilder<DoubleSolution>(problem, crossover, mutation).setSelectionOperator(selection)
-				.setMaxEvaluations(EVALS).setPopulationSize(POPULATION).build();
-
-		ArrayList<String> results = new ArrayList<>();
-		results.add("NSGII" );
-		for(int i=0; i< ITERATIONS; i++){
-			System.out.println("Starting run "+i);
-			AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();
-			List<DoubleSolution> population = algorithm.getResult();
-			results.add(Double.toString(population.get(0).getObjective(0) ) );
-		}
-
-		//List<DoubleSolution> population = algorithm.getResult();
-	    report("NSGII", startTime, results);
-		
-
-		//JMetalLogger.logger.info("Total execution time: " + computingTime + "ms");
-
-//		new SolutionListOutput(population).setSeparator("\t")
-//				.setVarFileOutputContext(new DefaultFileOutputContext("me_nsgiiVAR.tsv"))
-//				.setFunFileOutputContext(new DefaultFileOutputContext("me_nsgiiFUN.tsv")).print();
-
-		JMetalLogger.logger.info("Random seed: " + JMetalRandom.getInstance().getSeed());
 	}
 
 	public void random() throws FileNotFoundException {
@@ -201,17 +144,4 @@ public class Runner extends AbstractAlgorithmRunner {
 
 		JMetalLogger.logger.info("Random seed: " + JMetalRandom.getInstance().getSeed());
 	}
-	// public static void main(String [] args) throws IOException{
-	// //args = new String[1];
-	// //args[0]="ZDTStudy";
-	// //ZDTStudy.main(args);
-	// MapExploreProblem prob = new MapExploreProblem();
-	// Algorithm<List<DoubleSolution>> search = new
-	// RandomSearch<DoubleSolution>(prob, 10);
-	// search.run();
-	// List<DoubleSolution> result = search.getResult();
-	// System.out.println(result);
-	// System.out.println(prob.getMap().getAgents().get(0));
-	// }
-	//
 }

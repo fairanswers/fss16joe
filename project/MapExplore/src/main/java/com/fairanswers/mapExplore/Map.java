@@ -93,6 +93,13 @@ public class Map {
 		
 	}
 
+	public double getEnergy(){
+		double e=0;
+		for(Agent a: agents){
+			e += a.getEnergy();
+		}
+		return e;
+	}
 	public int getWid() {
 		return wid;
 	}
