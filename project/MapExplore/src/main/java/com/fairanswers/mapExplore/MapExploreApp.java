@@ -70,7 +70,7 @@ public class MapExploreApp {
 		for(int i=0; i<agents; i++){
 			int x=Model.getRandomIntRange(0, map.getWid());
 			int y=Model.getRandomIntRange(0, map.getLen());
-			Agent a = new Agent("A", x, y, dirWiggle, chanceFwd, map);
+			Agent a = new Agent("A", x, y, dirWiggle, chanceFwd, 0, map);
 			map.getAgents().add(a);
 		}
 		int ticks=1000;

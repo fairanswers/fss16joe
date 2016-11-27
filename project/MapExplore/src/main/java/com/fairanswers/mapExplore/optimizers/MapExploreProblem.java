@@ -18,7 +18,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 	public MapExploreProblem() {
 		super();
 		// Variables x, y, dirWiggle, chanceFwd, ticks, Hevily populated map , seed
-	    setNumberOfVariables(4);
+	    setNumberOfVariables(5);
 	    setNumberOfObjectives(2);
 	    setName("MapExplore");
 
@@ -33,7 +33,8 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 	    upperLimit.add(180.0);		// dirWiggle
 	    lowerLimit.add(0.0);		// chanceFwd
 	    upperLimit.add(1.0);		// chanceFwd
-	    //TerrainSeed?
+	    lowerLimit.add(0.0);		// laziness
+	    upperLimit.add(1.0);		// laziness
 	    setLowerLimit(lowerLimit);
 	    setUpperLimit(upperLimit);
 	}
@@ -44,7 +45,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		//private Agent agent;
 		Map map = new Map(multiplier, multiplier);
 		map.setTerrain(new Terrain(map, 1.0) );
-		Agent agent = new Agent("A", solution.getVariableValue(0), solution.getVariableValue(1), solution.getVariableValue(2), solution.getVariableValue(3), map);
+		Agent agent = new Agent("A", solution.getVariableValue(0), solution.getVariableValue(1), solution.getVariableValue(2), solution.getVariableValue(3), solution.getVariableValue(4), map);
 		agent.setDir(0);
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);

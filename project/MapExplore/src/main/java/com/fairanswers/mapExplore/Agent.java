@@ -14,7 +14,8 @@ public class Agent {
 	private static final String EXCITED = "EXCITED";
 	private static final String BORED = "BORED";
 	private static final String DONE = "DONE";
-	private static final Location ZERO_ZERO = new Location(0, 0);
+	private static final String LAZY = "LAZY";
+//	private static final Location ZERO_ZERO = new Location(0, 0);
 	String name; // UID
 	Location loc;
 	double speed = 1; // distance per tick
@@ -32,9 +33,11 @@ public class Agent {
 	private State excitedState;
 	private State boredState;
 	private State doneState;
+	private State lazyState;
 	private double boredDirection;
 	private double energy;
 	private boolean complete=false;
+	private double laziness=.1;
 
 	public Agent() {
 	}
@@ -56,10 +59,11 @@ public class Agent {
 		createModel();
 	}
 
-	public Agent(String name, double x, double y, double dirWiggle, double chanceFwd, Map map) {
+	public Agent(String name, double x, double y, double dirWiggle, double chanceFwd, double laziness, Map map) {
 		this(name, x, y, map);
 		this.dirWiggle = dirWiggle;
 		this.chanceFwd = chanceFwd;
+		this.laziness = laziness;
 	}
 
 	public Agent(String name, double x2, double y2, double speed, double dir, double see, double dirWiggle,
@@ -79,26 +83,60 @@ public class Agent {
 
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed
-		if(model.getHere()==excitedState){
+		if (model.getHere() == excitedState) {
 			double exploreDir = unexploredDir();
-			exploreDir = subtractAngles(exploreDir, this.dir) 
-					* getUnExploredWeight(); // Away from known places
+			exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight(); // Away
+																						// from
+																						// known
+																						// places
 			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
-		}
+			return tmpDir;
+		} else {  // Try something new.
+			model.tick(tick);
 
-		if(model.getHere()==boredState){
-			//Keep moving in the direction we were going when we got bored.
-			double boredDir = subtractAngles(boredDirection, this.dir) 
-					* getUnExploredWeight(); 
-			tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			if (model.getHere() == boredState) {
+				// Keep moving in the direction we were going when we got bored.
+				double boredDir = subtractAngles(boredDirection, this.dir) * getUnExploredWeight();
+				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			}
+
+			if (model.getHere() == lazyState) {
+				// Keep moving in the direction we were going when we got bored.
+				double boredDir = subtractAngles(boredDirection, this.dir) * getUnExploredWeight();
+				boredDir = findLazyDir(boredDir);
+				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			}
+
+			// Mostly go forward
+			if (Model.getRandom() < chanceFwd) {
+				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+				return tmpDir + wiggle;
+			} else {
+				return turnRandom(90);
+			}
 		}
-		// Mostly go forward
-		if (Model.getRandom() < chanceFwd) {
-			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
-			return tmpDir + wiggle;
-		} else {
-			return turnRandom(90);
+	}
+
+	private double findLazyDir(double boredDir) {
+		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
+		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
+		double center = findFriction(boredDir, speed);
+		if(left < right && left < center){
+			return left;
+		}else if(right<left && right < center){
+			return right;
+		}else{
+			return center;
 		}
+	}
+
+	private double findFriction(double boredDir, double speed2) {
+		double xTravel = getXTravel(dir, speed);
+		double yTravel = getYTravel(dir, speed);
+		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
+			return 100;
+		}
+		return ter.getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
 	}
 
 	// Returns positive or negative of difference.
@@ -171,10 +209,13 @@ public class Agent {
 	public void createModel() {
 		excitedState = new State(EXCITED, false);
 		boredState = new State(BORED, false);
+		lazyState = new State(LAZY, false);
 		doneState = new State(DONE, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(excitedState, new Always("BORING", boredState)));
-		t.add(new Trans(boredState, new Always("EXCITING", excitedState)));
+		t.add(new Trans(excitedState, new Always(BORED, boredState)));
+		t.add(new Trans(boredState, new Always(EXCITED, excitedState)));
+		t.add(new Trans(boredState, new Maybe(LAZY, lazyState, laziness)));
+		t.add(new Trans(lazyState, new Maybe(BORED, excitedState, laziness)));
 		model = new Model(t);
 	}
 
@@ -412,6 +453,14 @@ public class Agent {
 
 	public void setEnergy(double energy) {
 		this.energy = energy;
+	}
+
+	public double getLaziness() {
+		return laziness;
+	}
+
+	public void setLaziness(double laziness) {
+		this.laziness = laziness;
 	}
 
 }

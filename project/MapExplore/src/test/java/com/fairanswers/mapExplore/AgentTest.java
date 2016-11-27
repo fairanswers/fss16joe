@@ -25,7 +25,7 @@ public class AgentTest {
 	@Before
 	public void setUp() throws Exception {
 		map = new Map(80, 10);
-		agent = new Agent("a2", 1, 1, 1, 1, map);
+		agent = new Agent("a2", 1, 1, 1, 1, .1, map);
 		agent.setDir(0);
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
@@ -102,7 +102,7 @@ public class AgentTest {
 		map.setTerrain(new Terrain(map, 1.0) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
-		agent = new Agent("a3", 1, 1, 90, .9, map); //82.2
+		agent = new Agent("a3", 1, 1, 90, .9, 0, map); //82.2
 		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -127,8 +127,8 @@ public class AgentTest {
 		int multiplier = 10;
 		map = new Map(10*multiplier, 10*multiplier);
 		map.setTerrain(new Terrain(map, 1.0) );
-		Agent a = new Agent("a", 0, 0, 30, .2, map);
-		Agent b = new Agent("b", map.getWid()-1, map.getLen()-1, 30, .2, map);
+		Agent a = new Agent("a", 0, 0, 30, .2, 0, map);
+		Agent b = new Agent("b", map.getWid()-1, map.getLen()-1, 30, .2, 0, map);
 		b.setTer(a.getTer());
 		map.getAgents().add(a);
 		map.getAgents().add(b);
@@ -290,7 +290,7 @@ public class AgentTest {
 	@Test
 	public void testAgentBumpAndTurnExciting() {
 		map.agents.remove(0);
-		agent = new Agent("testAgentBumpAndTurnExciting", 1, 1, 10, .60, map);
+		agent = new Agent("testAgentBumpAndTurnExciting", 1, 1, 10, .60,0 , map);
 		map.agents.add(agent);
 		Model.setRandomSeed(1L);
 		agent.setDir(90);
@@ -332,7 +332,7 @@ public class AgentTest {
 		}
 		System.out.println(map);
 		System.out.println(agent);
-		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(0, 1));
+		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(1, 1));
 	}
 
 	@Test
