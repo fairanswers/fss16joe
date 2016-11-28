@@ -25,7 +25,7 @@ public class AgentTest {
 	@Before
 	public void setUp() throws Exception {
 		map = new Map(80, 10);
-		agent = new Agent("a2", 1, 1, 1, 1, .1, map);
+		agent = new Agent("a2", 1, 1, 1, 1, 1, map);
 		agent.setDir(0);
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
@@ -332,7 +332,7 @@ public class AgentTest {
 		}
 		System.out.println(map);
 		System.out.println(agent);
-		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(1, 0));
+		assertEquals("Checking for agent at 1x1", Terrain.AGENT, map.getViewAt(1, 1));
 	}
 
 

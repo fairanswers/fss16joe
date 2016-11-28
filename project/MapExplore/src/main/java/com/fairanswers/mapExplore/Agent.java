@@ -83,38 +83,35 @@ public class Agent {
 
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed
-		if (model.getHere() == excitedState) {
+		//if (model.getHere() == excitedState) {
 			double exploreDir = unexploredDir();
-			exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight(); // Away
-																						// from
-																						// known
-																						// places
+			exploreDir = subtractAngles(exploreDir, this.dir);
 			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 			return tmpDir;
-		} else {  // Try something new.
-			model.tick(tick);
-
-			if (model.getHere() == boredState) {
-				// Keep moving in the direction we were going when we got bored.
-				double boredDir = subtractAngles(boredDirection, this.dir) * getUnExploredWeight();
-				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
-			}
-
-			if (model.getHere() == lazyState) {
-				// Keep moving in the direction we were going when we got bored.
-				double boredDir = subtractAngles(boredDirection, this.dir) * getUnExploredWeight();
-				boredDir = findLazyDir(boredDir);
-				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
-			}
-
-			// Mostly go forward
-			if (Model.getRandom() < chanceFwd) {
-				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
-				return tmpDir + wiggle;
-			} else {
-				return turnRandom(90);
-			}
-		}
+//		} else {  // Try something new.
+//			model.tick(tick);
+//
+//			if (model.getHere() == boredState) {
+//				// Keep moving in the direction we were going when we got bored.
+//				double boredDir = subtractAngles(boredDirection, this.dir) ;
+//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+//			}
+//
+//			if (model.getHere() == lazyState) {
+//				// Keep moving in the direction we were going when we got bored.
+//				double boredDir = subtractAngles(boredDirection, this.dir) ;
+//				boredDir = findLazyDir(boredDir);
+//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+//			}
+//
+//			// Mostly go forward
+//			if (Model.getRandom() < chanceFwd) {
+//				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+//				return tmpDir + wiggle;
+//			} else {
+//				return turnRandom(90);
+//			}
+//		}
 	}
 
 	private double findLazyDir(double boredDir) {
