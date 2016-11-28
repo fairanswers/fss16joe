@@ -34,7 +34,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 	    lowerLimit.add(0.0);		// chanceFwd
 	    upperLimit.add(1.0);		// chanceFwd
 	    lowerLimit.add(0.0);		// laziness
-	    upperLimit.add(1.0);		// laziness
+	    upperLimit.add(.9);		// laziness
 	    setLowerLimit(lowerLimit);
 	    setUpperLimit(upperLimit);
 	}
@@ -66,7 +66,12 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		solution.setObjective(0, cov);
 		double energy =agent.getEnergy()/1000;
 		solution.setObjective(1, energy);
-		System.out.println("Finished with percent = "+cov+" Energy = "+energy +" at "+new Date() );
+		System.out.println("Finished with unknown percent = "+cov
+				+" Energy = "+energy 
+				+" DirWiggle="+agent.getDirWiggle()
+				+" ChanceFwd="+agent.getChanceFwd()
+				+" Laziness="+agent.getLaziness()
+				+" at "+new Date() );
 	}
 
 	public static MapExploreProblem create(int seed) {

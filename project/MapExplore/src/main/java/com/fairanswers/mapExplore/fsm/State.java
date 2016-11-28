@@ -23,12 +23,12 @@ public class State {
 		Collections.shuffle(guards, Model.getRandomGenerator()); //Shuffle in place
 		for(Guard g:guards){
 			if(g.isTrue() ){
-				System.out.println("Trans from "+name+" via "+g.getName()+" to "+g.getTo().getName() );
+				//System.out.println("Trans from "+name+" via "+g.getName()+" to "+g.getTo().getName() );
 				return g.getTo();
 			}
 		}
 		//If nothing else, stay where we are.
-		System.out.println("Staying at "+name);
+		//System.out.println("Staying at "+name);
 		return this;
 	}
 	

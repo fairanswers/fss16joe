@@ -420,25 +420,128 @@ NSGIIa -91.86 -92.25 -90.94 -90.97 -91.22 -92.68 -90.69 -90.07 -91.2 -91.67 -91.
 Modify behavior so energy consumption is taken into account.
 * Agents track energy consumption.  Done.
 * Maps aggregate energy consumption. Done.
-* Opts. consider percent complete with energy consumption.
-* Display beginning and end Pareto plot.
-* Better function to minimize energy - Agent variable that decides how lazy to be.
+* Opts. consider percent complete with energy consumption. Done.
+* Display beginning and end Pareto plot. Done
+* Better function to minimize energy - Agent variable that decides how lazy to be. Done.
 * Consider whether chanceFwd is worthwhile. Can take it out?.
 * Run fewer iterations - data too similar
-* DE is 10 times decisions - 100-1000
-* Instead of random terrain, use the surrounding terrain to decide.
+* DE is 10 times decisions - 100-1000 population
 * Find scholarly articles.
 
+Once I started doing this, the lazy factor blew up my effiencey.  I went from coving 80-90% of each map to covering 5-25%.
 
+Also, I changed my DE from cr=.5 to .3, and the results were really odd.  Some of the initial points were much better than the final ones, even on 300 evaluations.
+```
+CoverageDE.cr=0.3_f=0.9_variant=rand/1/bin_pop=20_evals=300_seed3932 68.18 60.584 69.06 65.54 69.17 56.324 69.44 67.188 69.78 67.08 70.16 87.952 70.26 69.828 71.23 73.14 71.23 67.04 71.74 80.819 72.4 79.272 72.66 86.024 72.7 67.524 72.78999999999999 90.272 73.63 56.24 73.68 70.204 73.78 64.032 74.0 82.696 74.23 93.251 74.4 60.596 
+
+PARETO:
+Terrain: variance=0.0 covered=0.39%
+T0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789T
+9                                                                           I          I  I I   I    9
+8                                                                                                    8
+7                                                                              I                     7
+6                                                                                                    6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                          *                         3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                        *                           0
+9                                                                                                    9
+8                                                                                                    8
+7                                                                      *                             7
+6                                                                        *                           6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                                                    3
+2                                                                          *                         2
+1                                                                             I                      1
+0                                                                       *                            0
+9                                                                        *                           9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                                                    6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                       *                            3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                         *                          0
+9                                                                      *                             9
+8                                                                                                    8
+7                                                                     * **                           7
+6                                                                                                    6
+5                                                                     *                              5
+4                                                                         *                          4
+3                                                                        I                           3
+2                                                                    I                               2
+1                                                                                II                  1
+0                                                                    *     *                         0
+9                                                                                                    9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                     *   *                          6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                                                    3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+9                                                                                                    9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                                                    6
+5                                                                                   I                5
+4                                                                                                    4
+3                                                                                                    3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+9                                                                                   I                9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                                                    6
+5                                                                                    I    I          5
+4                                                                                                    4
+3                                                                                         I          3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+9                                                                                                    9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                                                I   6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                                                    3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+9                                                                                                    9
+8                                                                                               I    8
+7                                                                                              I     7
+6                                                                                                    6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                                                I   3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+9                                                                                                    9
+8                                                                                                    8
+7                                                                                                    7
+6                                                                                                    6
+5                                                                                                    5
+4                                                                                                    4
+3                                                                                                    3
+2                                                                                                    2
+1                                                                                                    1
+0                                                                                                    0
+T0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789T 
+
+```
 #Future
 
-States
-
-Happy
-
-* Wander - There are unknows nearby, go find them.
-* Lazy - Only take the easiest paths
-* Board - Haven't seen a new on in a while.  Find the nearest and go to it. (Travel-to-point).  If you can't get there, give up after a while (state=dead) and try again.  Search by quarter, half, and all.
 
 ?Increate likelyhood of walls by doing a grid like on unbox, where each value increases the likelyhood of walls.  YOu can do vertical, horizontal, diagonal.
 

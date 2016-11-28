@@ -102,7 +102,7 @@ public class AgentTest {
 		map.setTerrain(new Terrain(map, 1.0) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
-		agent = new Agent("a3", 1, 1, 90, .9, 0, map); //82.2
+		agent = new Agent("a3", 1, 1, 1, 1, 1, map); //82.2
 		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -206,7 +206,7 @@ public class AgentTest {
 		int multiplier = 10;
 		map = new Map(10*multiplier, 10*multiplier);
 		map.setTerrain(new Terrain(map, 1.0) );
-		Agent a = new Agent("a", 1, 2, 1, 0, 3, 10, .9, 1, map);
+		Agent a = new Agent("a", 1, 2, 1, 0, 3, 10, .9, .01, map);
 		map.getAgents().add(a);
 		Model.setRandomSeed(1L);
 		
@@ -332,7 +332,14 @@ public class AgentTest {
 		}
 		System.out.println(map);
 		System.out.println(agent);
-		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(1, 1));
+		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(1, 0));
+	}
+
+
+	@Test
+	public void testLazy() {
+		agent.setDir(0);
+		
 	}
 
 	@Test

@@ -136,7 +136,7 @@ public class Agent {
 		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			return 100;
 		}
-		return ter.getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
+		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
 	}
 
 	// Returns positive or negative of difference.
@@ -212,8 +212,8 @@ public class Agent {
 		lazyState = new State(LAZY, false);
 		doneState = new State(DONE, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(excitedState, new Always(BORED, boredState)));
-		t.add(new Trans(boredState, new Always(EXCITED, excitedState)));
+		//t.add(new Trans(excitedState, new Always(BORED, boredState)));
+		//t.add(new Trans(boredState, new Always(EXCITED, excitedState)));
 		t.add(new Trans(boredState, new Maybe(LAZY, lazyState, laziness)));
 		t.add(new Trans(lazyState, new Maybe(BORED, excitedState, laziness)));
 		model = new Model(t);
