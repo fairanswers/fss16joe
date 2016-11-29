@@ -38,8 +38,8 @@ public class DEProblem implements Runnable{
 	    DifferentialEvolutionCrossover crossover;
 	    SolutionListEvaluator<DoubleSolution> evaluator ;
 
-	    double cr = .5;
-	    double f = .5;
+	    double cr = .3;
+	    double f = .9;
 	    String variant = "rand/1/bin";
 	    int seed = Model.getRandomIntRange(0, 10000);
 	    		
