@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.naming.InitialContext;
 
+import org.uma.jmetal.algorithm.multiobjective.gde3.GDE3;
+import org.uma.jmetal.algorithm.multiobjective.gde3.GDE3Builder;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.algorithm.singleobjective.differentialevolution.DifferentialEvolution;
 import org.uma.jmetal.algorithm.singleobjective.differentialevolution.DifferentialEvolutionBuilder;
@@ -36,8 +38,8 @@ public class DEProblem implements Runnable{
 	    DifferentialEvolutionCrossover crossover;
 	    SolutionListEvaluator<DoubleSolution> evaluator ;
 
-	    double cr = .3;
-	    double f = .9;
+	    double cr = .5;
+	    double f = .5;
 	    String variant = "rand/1/bin";
 	    int seed = Model.getRandomIntRange(0, 10000);
 	    		
@@ -53,15 +55,20 @@ public class DEProblem implements Runnable{
 	    crossover = new DifferentialEvolutionCrossover(cr,f,variant) ;
 	    selection = new DifferentialEvolutionSelection();
 
-	    DifferentialEvolution algorithm = new DifferentialEvolutionBuilder(problem)
-	        .setCrossover(crossover)
-	        .setSelection(selection)
-	        .setSolutionListEvaluator(evaluator)
-	        .setMaxEvaluations(evals )
-	        .setPopulationSize(population)
-	        .build() ;
+//	    DifferentialEvolution algorithm = new DifferentialEvolutionBuilder(problem)
+//	        .setCrossover(crossover)
+//	        .setSelection(selection)
+//	        .setSolutionListEvaluator(evaluator)
+//	        .setMaxEvaluations(evals )
+//	        .setPopulationSize(population)
+//	        .build() ;
 
-
+	    GDE3 algorithm = new GDE3Builder(problem)
+	      .setCrossover(crossover)
+	      .setSelection(selection)
+	      .setMaxEvaluations(evals)
+	      .setPopulationSize(population)
+	      .build() ;
 
 
 	    ArrayList<String> results = new ArrayList<>();

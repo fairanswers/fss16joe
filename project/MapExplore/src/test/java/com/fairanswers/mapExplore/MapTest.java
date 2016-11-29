@@ -62,7 +62,7 @@ public class MapTest {
 
 	@Test
 	public void testTerrainBoring(){
-		Map map = new Map(10,4);
+		Map map = new Map(30,15);
 		Terrain t = new Terrain(map, 10);
 		map.setTerrain(t);
 		System.out.println(map);

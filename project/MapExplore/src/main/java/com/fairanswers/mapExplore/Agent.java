@@ -81,13 +81,38 @@ public class Agent {
 		createModel();
 	}
 
+
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed
-		//if (model.getHere() == excitedState) {
+		if(model.getHere()==excitedState){
 			double exploreDir = unexploredDir();
-			exploreDir = subtractAngles(exploreDir, this.dir);
+			exploreDir = subtractAngles(exploreDir, this.dir) 
+					* getUnExploredWeight(); // Away from known places
 			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
-			return tmpDir;
+		}
+
+		if(model.getHere()==boredState){
+			//Keep moving in the direction we were going when we got bored.
+			double boredDir = subtractAngles(boredDirection, this.dir) 
+					* getUnExploredWeight(); 
+			tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+		}
+		// Mostly go forward
+		if (Model.getRandom() < chanceFwd) {
+			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+			return tmpDir + wiggle;
+		} else {
+			return turnRandom(90);
+		}
+	}
+
+//	public double decideDir() {
+//		double tmpDir = this.dir;// Where we're currently headed
+//		if (model.getHere() == excitedState) {
+//			double exploreDir = unexploredDir();
+//			exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();
+//			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
+//			return tmpDir;
 //		} else {  // Try something new.
 //			model.tick(tick);
 //
@@ -112,29 +137,29 @@ public class Agent {
 //				return turnRandom(90);
 //			}
 //		}
-	}
-
-	private double findLazyDir(double boredDir) {
-		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
-		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
-		double center = findFriction(boredDir, speed);
-		if(left < right && left < center){
-			return left;
-		}else if(right<left && right < center){
-			return right;
-		}else{
-			return center;
-		}
-	}
-
-	private double findFriction(double boredDir, double speed2) {
-		double xTravel = getXTravel(dir, speed);
-		double yTravel = getYTravel(dir, speed);
-		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
-			return 100;
-		}
-		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
-	}
+//	}
+//
+//	private double findLazyDir(double boredDir) {
+//		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
+//		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
+//		double center = findFriction(boredDir, speed);
+//		if(left < right && left < center){
+//			return left;
+//		}else if(right<left && right < center){
+//			return right;
+//		}else{
+//			return center;
+//		}
+//	}
+//
+//	private double findFriction(double boredDir, double speed2) {
+//		double xTravel = getXTravel(dir, speed);
+//		double yTravel = getYTravel(dir, speed);
+//		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
+//			return 100;
+//		}
+//		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
+//	}
 
 	// Returns positive or negative of difference.
 	public double subtractAngles(double first, double second) {

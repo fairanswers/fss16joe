@@ -280,7 +280,7 @@ public class AgentTest {
 		System.out.println(map);
 		for (int i = 0; i < 500; i++) {
 			map.tick();
-			System.out.println(map);
+			System.out.println(agent);
 		}
 		System.out.println(agent);
 		// assertEquals("Checking for agent at 0x1", Terrain.AGENT,
