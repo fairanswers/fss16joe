@@ -38,6 +38,7 @@ public class Agent {
 	private double energy;
 	private boolean complete=false;
 	private double laziness=.1;
+	private Location boredCorner;
 
 	public Agent() {
 	}
@@ -82,84 +83,115 @@ public class Agent {
 	}
 
 
+//	public double decideDir() {
+//Works but not lazy
+		//		double tmpDir = this.dir;// Where we're currently headed
+//		if(model.getHere()==excitedState){
+//			double exploreDir = unexploredDir();
+//			exploreDir = subtractAngles(exploreDir, this.dir) 
+//					* getUnExploredWeight(); // Away from known places
+//			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
+//		}
+//
+//		if(model.getHere()==boredState){
+//			//Keep moving in the direction we were going when we got bored.
+//			double boredDir = subtractAngles(boredDirection, this.dir) 
+//					* getUnExploredWeight(); 
+//			tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+//		}
+//		// Mostly go forward
+//		if (Model.getRandom() < chanceFwd) {
+//			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+//			return tmpDir + wiggle;
+//		} else {
+//			return turnRandom(90);
+//		}
+//	}
+
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed
-		if(model.getHere()==excitedState){
-			double exploreDir = unexploredDir();
-			exploreDir = subtractAngles(exploreDir, this.dir) 
-					* getUnExploredWeight(); // Away from known places
-			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
-		}
+		double exploreDir = unexploredDir();
+		exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();
+		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
+		if (model.getHere() == excitedState) {
+			//return tmpDir;
+		} else {  // Try something new.
+			model.tick(tick);
+			//If we're at the corner, get excited.
+			if(closeToBoredCorner()){
+				model.setHere(excitedState);
+			}
+			if (model.getHere() == boredState) {
+				// Go the other way
+				tmpDir = decideWhileBored(tmpDir);
+//				double boredDir = subtractAngles(boredDirection, this.dir) ;
+//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			}
 
-		if(model.getHere()==boredState){
-			//Keep moving in the direction we were going when we got bored.
-			double boredDir = subtractAngles(boredDirection, this.dir) 
-					* getUnExploredWeight(); 
-			tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			if (model.getHere() == lazyState) {
+				tmpDir = decideWhileBored(tmpDir);
+				double boredDir = findLazyDir(boredDirection);
+				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+			}
+
+			// Mostly go forward
+			if (Model.getRandom() < chanceFwd) {
+				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+				tmpDir += wiggle;
+			} else {
+				tmpDir= turnRandom(90);
+			}
 		}
-		// Mostly go forward
-		if (Model.getRandom() < chanceFwd) {
-			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
-			return tmpDir + wiggle;
-		} else {
-			return turnRandom(90);
+		return tmpDir;
+	}
+
+public boolean closeToBoredCorner() {
+	double closeX = map.getLen()*.05;
+	double closeY = map.getWid()*.05;
+	if(boredCorner == null || loc == null){
+		System.out.println("Something Null"+this.toString());
+
+		System.out.println("Something Null"+this.toString());
+	}
+	double xdiff = Math.abs(boredCorner.getX() - loc.getX());
+	double ydiff = Math.abs(boredCorner.getY() - loc.getY());
+	if(closeX > xdiff && closeY > ydiff){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+private double decideWhileBored(double tmpDir) {
+	double rise = boredCorner.getY()-loc.getY();
+	double run  = boredCorner.getX()-loc.getX();
+	double tmpBoredDir = getDegreesFromSlope(rise, run);
+	tmpBoredDir = subtractAngles(tmpBoredDir, this.dir);
+	//tmpDir = getAbsoluteDegrees(tmpDir + tmpBoredDir);
+	return tmpBoredDir;
+}
+
+	private double findLazyDir(double boredDir) {
+		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
+		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
+		double center = findFriction(boredDir, speed);
+		if(left < right && left < center){
+			return left;
+		}else if(right<left && right < center){
+			return right;
+		}else{
+			return center;
 		}
 	}
 
-//	public double decideDir() {
-//		double tmpDir = this.dir;// Where we're currently headed
-//		if (model.getHere() == excitedState) {
-//			double exploreDir = unexploredDir();
-//			exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();
-//			tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
-//			return tmpDir;
-//		} else {  // Try something new.
-//			model.tick(tick);
-//
-//			if (model.getHere() == boredState) {
-//				// Keep moving in the direction we were going when we got bored.
-//				double boredDir = subtractAngles(boredDirection, this.dir) ;
-//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
-//			}
-//
-//			if (model.getHere() == lazyState) {
-//				// Keep moving in the direction we were going when we got bored.
-//				double boredDir = subtractAngles(boredDirection, this.dir) ;
-//				boredDir = findLazyDir(boredDir);
-//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
-//			}
-//
-//			// Mostly go forward
-//			if (Model.getRandom() < chanceFwd) {
-//				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
-//				return tmpDir + wiggle;
-//			} else {
-//				return turnRandom(90);
-//			}
-//		}
-//	}
-//
-//	private double findLazyDir(double boredDir) {
-//		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
-//		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
-//		double center = findFriction(boredDir, speed);
-//		if(left < right && left < center){
-//			return left;
-//		}else if(right<left && right < center){
-//			return right;
-//		}else{
-//			return center;
-//		}
-//	}
-//
-//	private double findFriction(double boredDir, double speed2) {
-//		double xTravel = getXTravel(dir, speed);
-//		double yTravel = getYTravel(dir, speed);
-//		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
-//			return 100;
-//		}
-//		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
-//	}
+	private double findFriction(double boredDir, double speed2) {
+		double xTravel = getXTravel(dir, speed);
+		double yTravel = getYTravel(dir, speed);
+		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
+			return 100;
+		}
+		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
+	}
 
 	// Returns positive or negative of difference.
 	public double subtractAngles(double first, double second) {
@@ -176,6 +208,23 @@ public class Agent {
 			a = a + 360;
 		return a;
 	}
+	public double getDegreesFromSlope(double rise, double run){
+		if(rise == 0.0){
+			rise = .0001;
+		}
+		if(run == 0.0){
+			run = .0001;
+		}
+		double degrees = Math.toDegrees( Math.atan2(rise, run) );
+		degrees = getAbsoluteDegrees(degrees);
+		degrees = -1*degrees + 360;
+		degrees = getAbsoluteDegrees(degrees);
+		if(degrees < 0.0){
+			degrees = 360.0 + degrees;
+		}
+		return degrees;
+	}
+
 
 	// Behavior needs to change based on state
 	public int unexploredDir() {
@@ -210,6 +259,7 @@ public class Agent {
 		if (l.equals(0, 0)) {
 			return 0;
 		}
+		//return (int) getDegreesFromSlope(l.getY(), l.getX() );
 		int d = (int) Math.toDegrees(Math.atan2(l.getY(), l.getX()));
 		if (d < 0)
 			d = d + 360;
@@ -234,7 +284,7 @@ public class Agent {
 		lazyState = new State(LAZY, false);
 		doneState = new State(DONE, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		//t.add(new Trans(excitedState, new Always(BORED, boredState)));
+		t.add(new Trans(excitedState, new Always(EXCITED, excitedState)));
 		//t.add(new Trans(boredState, new Always(EXCITED, excitedState)));
 		t.add(new Trans(boredState, new Maybe(LAZY, lazyState, laziness)));
 		t.add(new Trans(lazyState, new Maybe(BORED, excitedState, laziness)));
@@ -250,6 +300,7 @@ public class Agent {
 		}
 		if (map.isCliff(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			setDir(turnRandom(90));
+			move(getDir(), speed);
 			return;
 		}
 		setDir(dir);
@@ -302,17 +353,33 @@ public class Agent {
 	private void checkState(int found) {
 		if (found > 0) {
 			boredCounter = 0;
-			if (model.getHere() == boredState) {
-				model.setHere(excitedState);
-			}
+			boredCorner = null;
+			model.setHere(excitedState);
 		} else {
 			boredCounter++;
 			if (boredCounter == boredLimit) {
+				boredCorner = pickCorner();
 				model.setHere(boredState);
-				boredDirection = subtractAngles(dir,180);
 			}
 		}
 
+	}
+
+	public Location pickCorner() {
+		double x, y;
+		//Pick X
+		if(.5 < Model.getRandom() ){
+			x = 0;
+		}else{
+			x=map.getWid()-1;
+		}
+		//Pick Y
+		if(.5 < Model.getRandom() ){
+			y = 0;
+		}else{
+			y=map.getLen()-1;
+		}
+		return new Location(x,y);
 	}
 
 	public int look(double xCenter, double yCenter, Map map) {
@@ -483,6 +550,62 @@ public class Agent {
 
 	public void setLaziness(double laziness) {
 		this.laziness = laziness;
+	}
+
+	public Location getBoredCorner() {
+		return boredCorner;
+	}
+
+	public void setBoredCorner(Location boredCorner) {
+		this.boredCorner = boredCorner;
+	}
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public State getExcitedState() {
+		return excitedState;
+	}
+
+	public void setExcitedState(State excitedState) {
+		this.excitedState = excitedState;
+	}
+
+	public State getBoredState() {
+		return boredState;
+	}
+
+	public void setBoredState(State boredState) {
+		this.boredState = boredState;
+	}
+
+	public State getDoneState() {
+		return doneState;
+	}
+
+	public void setDoneState(State doneState) {
+		this.doneState = doneState;
+	}
+
+	public State getLazyState() {
+		return lazyState;
+	}
+
+	public void setLazyState(State lazyState) {
+		this.lazyState = lazyState;
+	}
+
+	public boolean isComplete() {
+		return complete;
+	}
+
+	public void setComplete(boolean complete) {
+		this.complete = complete;
 	}
 
 }

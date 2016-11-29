@@ -90,8 +90,8 @@ public class Map {
 			a.tick(tick);
 		}
 		return this.tick;
-		
 	}
+	
 
 	public double getEnergy(){
 		double e=0;

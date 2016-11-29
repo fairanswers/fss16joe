@@ -102,7 +102,7 @@ public class AgentTest {
 		map.setTerrain(new Terrain(map, 1.0) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
-		agent = new Agent("a3", 1, 1, 1, 1, 1, map); //82.2
+		agent = new Agent("a3", 1, 1, 1, 1, .2, map); //82.2
 		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -120,6 +120,70 @@ public class AgentTest {
 		}
 		System.out.println(agent);
 		//System.out.println(map);
+	}
+
+	@Test
+	public void testBoredMap() {
+		int multiplier = 100;
+		map = new Map(multiplier, multiplier);
+		map.setTerrain(new Terrain(map, 1.0) );
+		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
+		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
+		agent = new Agent("a3", 1, 1, 1, 1, .2, map); //82.2
+		
+		map.getAgents().add(agent);
+		Model.setRandomSeed(1L);
+		
+		//for (int i = 0; i < 100*multiplier; i++) {
+		for (int i = 0; i < multiplier * multiplier; i++) {
+			map.tick();
+			agent.getModel().setHere(agent.getBoredState());
+			agent.setBoredCorner(new Location(99,99));
+			//System.out.println(agent);
+			if(map.getTick() % 100== 0 ){
+				//System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				System.out.println(agent);
+				
+			}
+		}
+		System.out.println(agent);
+		//System.out.println(map);
+	}
+
+	@Test
+	public void testDegreesFromSlope() {
+		double tmpDir = 0;
+		double north = agent.getDegreesFromSlope(0, 1);
+		assertTrue( agent.subtractAngles(tmpDir, north) < 1.0);
+		double south = agent.getDegreesFromSlope(0, -1);
+		assertTrue( Math.abs(180-south) < 1.0);
+		double east  = agent.getDegreesFromSlope(100, 0);
+		double west  = agent.getDegreesFromSlope(-10, 0);
+		double nw    = agent.getDegreesFromSlope(-1000, 1000);
+		double se    = agent.getDegreesFromSlope(10, -10);
+		double ne    = agent.getDegreesFromSlope(1000, 1000);
+		double sw    = agent.getDegreesFromSlope(-1, -1);
+		
+	}
+
+	@Test
+	public void testCloseToCorner() {
+		Map m = new Map(100, 100);
+		Agent agent = new Agent("a", 50, 50, m);
+		agent.setBoredCorner(new Location(0, 0));
+		assertFalse(agent.closeToBoredCorner() );
+		agent.setLoc(1, 1);
+		assertTrue(agent.closeToBoredCorner() );
+
+		agent.setBoredCorner(new Location(0, 99));
+		assertFalse(agent.closeToBoredCorner() );
+		agent.setLoc(1, 97);
+		assertTrue(agent.closeToBoredCorner() );
+		
+		for(int i=0; i< 10; i++){
+			System.out.println("Valid bored corner = "+agent.pickCorner());
+		}
 	}
 
 	@Test
