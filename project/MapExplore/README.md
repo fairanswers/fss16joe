@@ -3,18 +3,17 @@
 This project will use Particle Swarm Optimization to cover a map.  
 
 The decisions will include
-* Map size
-* Number of agents
-* Points of Interest (POI)
+* Likelihood of taking a random turn.
+* Search algorithm based on state - Excited, Bored, Lazy.  Transition chances are initial conditions.
+* Adding random small variations 
 
 Objectives:
-* Percent map coverage (maximize)
-* Time (measured in clock ticks)
-* POI found
+* Percent map unknown (minimize)
+* Energy (minimize)
 
 Interesting Scenarios
 * Known POI location vs. unknown POI location.  Bomb dogs and MIA search and rescue
-* Starting at random points vs the same point.
+* POI that move, so older data is less reliable.
 * Solar charging - Rain, sunshine.  Affects charge rate, wet terrain slows speed.
 
 Not on agenda
