@@ -102,7 +102,8 @@ public class AgentTest {
 		map.setTerrain(new Terrain(map, 1.0) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
-		agent = new Agent("a3", 1, 1, 1, 1, .2, map); //82.2
+		//agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //21
+		agent = new Agent("a3", 1, 1, 20, .9, 1.1, map); //
 		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);

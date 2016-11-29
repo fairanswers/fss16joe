@@ -407,8 +407,8 @@ private double decideWhileBored(double tmpDir) {
 
 	@Override
 	public String toString() {
-		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + dir + ", speed=" + speed + ", see=" + see
-				+ ", dirWiggle=" + dirWiggle + ", chanceFwd=" + chanceFwd + ", tick=" + tick + ", ter=" + map.end + ter
+		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + Map.numFormat.format(dir) + ", speed=" + speed + ", see=" + see
+				+ ", dirWiggle=" + Map.numFormat.format(dirWiggle) + ", chanceFwd=" + Map.numFormat.format(chanceFwd) + ", tick=" + tick + ", ter=" + map.end + ter
 				+ map.end + "]";
 	}
 
