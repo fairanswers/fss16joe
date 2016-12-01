@@ -108,11 +108,13 @@ public class Agent {
 //		}
 //	}
 
+	// Zero degrees is East
 	public double decideDir() {
-		double tmpDir = this.dir;// Where we're currently headed
-		double exploreDir = unexploredDir();
-		exploreDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();
-		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
+		double tmpDir = this.dir;// Where we're currently headed in absolute, positive degrees
+		double exploreDir = unexploredDir();// Absolute deg
+		//tmpDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();  //This isn't right.
+		//tmpDir = exploreDir;
+//		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 		if (model.getHere() == excitedState) {
 			//return tmpDir;
 		} else {  // Try something new.
@@ -208,6 +210,8 @@ public double decideWhileBored(double tmpDir) {
 			a = a + 360;
 		return a;
 	}
+	
+	// Return absolute degrees
 	public double getDegreesFromSlope(double rise, double run){
 		if(rise == 0.0){
 			rise = .0001;
@@ -217,7 +221,7 @@ public double decideWhileBored(double tmpDir) {
 		}
 		double degrees = Math.toDegrees( Math.atan2(rise, run) );
 		degrees = getAbsoluteDegrees(degrees);
-		degrees = -1*degrees + 360;
+//		degrees = -1*degrees + 360;
 		degrees = getAbsoluteDegrees(degrees);
 		if(degrees < 0.0){
 			degrees = 360.0 + degrees;

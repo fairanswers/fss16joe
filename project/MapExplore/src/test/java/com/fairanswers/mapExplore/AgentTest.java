@@ -127,10 +127,10 @@ public class AgentTest {
 	public void testBoredMap() {
 		int multiplier = 100;
 		map = new Map(multiplier, multiplier);
-		map.setTerrain(new Terrain(map, 1.0) );
+		map.setTerrain(new Terrain(map, Terrain.PAVED) );
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
-		agent = new Agent("a3", 1, 1, 1, 1, .2, map); //82.2
+		agent = new Agent("a3", 1, 1, 1, 1, 1, map); //82.2
 		
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -417,9 +417,26 @@ public class AgentTest {
 		}
 		System.out.println(map);
 		System.out.println(agent);
-		assertEquals("Checking for agent at 1x1", Terrain.AGENT, map.getViewAt(1, 1));
+		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(0, 1));
 	}
 
+	@Test 
+	public void testGetXTravel(){
+		assertTrue(Math.abs(1 - agent.getXTravel(0, 1)) < .01 );
+		assertTrue(Math.abs(.7 - agent.getXTravel(45, 1)) < .01 );
+		assertTrue(Math.abs( agent.getXTravel(90, 1)) < .01 );
+		assertTrue(Math.abs(.7 + agent.getXTravel(135, 1)) < .01 );
+		assertTrue(Math.abs(1+ agent.getXTravel(180, 1)) < .01 );
+	}
+
+	@Test 
+	public void testGetYTravel(){
+		assertTrue(Math.abs(agent.getYTravel(0, 1)) < .01 );
+		assertTrue(Math.abs(.7 - agent.getYTravel(45, 1)) < .01 );
+		assertTrue(Math.abs(1- agent.getYTravel(90, 1)) < .01 );
+		assertTrue(Math.abs(.7 - agent.getYTravel(135, 1)) < .01 );
+		assertTrue(Math.abs( agent.getYTravel(180, 1)) < .01 );
+	}
 
 	@Test
 	public void testLazy() {
