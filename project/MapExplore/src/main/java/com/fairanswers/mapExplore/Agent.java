@@ -162,12 +162,12 @@ public boolean closeToBoredCorner() {
 	}
 }
 
-private double decideWhileBored(double tmpDir) {
+public double decideWhileBored(double tmpDir) {
 	double rise = boredCorner.getY()-loc.getY();
 	double run  = boredCorner.getX()-loc.getX();
 	double tmpBoredDir = getDegreesFromSlope(rise, run);
-	tmpBoredDir = subtractAngles(tmpBoredDir, this.dir);
-	//tmpDir = getAbsoluteDegrees(tmpDir + tmpBoredDir);
+	//tmpBoredDir = subtractAngles(tmpBoredDir, this.dir);
+	//tmpBoredDir = getAbsoluteDegrees(tmpBoredDir);
 	return tmpBoredDir;
 }
 

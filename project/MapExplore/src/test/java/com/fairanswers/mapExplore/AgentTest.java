@@ -151,6 +151,26 @@ public class AgentTest {
 		System.out.println(agent);
 		//System.out.println(map);
 	}
+	
+	@Test
+	public void testBoredCorner(){
+		agent.getModel().setHere(agent.getBoredState());
+		agent.setBoredCorner(new Location(99,99));
+		System.out.println(agent.decideWhileBored(0));
+	}
+
+	@Test
+	public void testUnexploredDir(){
+		//agent.getModel().setHere(agent.getBoredState());
+		//agent.setBoredCorner(new Location(99,99));
+		agent.setDir(180);
+		System.out.println(agent.unexploredDir());
+		agent.setDir(80);
+		System.out.println(agent.unexploredDir());
+		agent.setDir(200);
+		System.out.println(agent.unexploredDir());
+		agent.setLoc(99, 99);
+	}
 
 	@Test
 	public void testDegreesFromSlope() {
