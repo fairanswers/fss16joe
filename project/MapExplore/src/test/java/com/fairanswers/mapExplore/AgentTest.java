@@ -103,7 +103,7 @@ public class AgentTest {
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
 		//agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //21
 		//agent = new Agent("a3", 1, 1, 20, 1, 1.1, map); //32.79
-		agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //
+		agent = new Agent("a3", 1, 1, 20, .1, 1.1, map); //
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -113,7 +113,7 @@ public class AgentTest {
 			if(map.getTick() % 1000== 0 ){
 				//System.out.println(map.getTick());
 				//agent.setUnExploredWeight(Model.getRandom() * .5);
-				//System.out.println(agent);
+				System.out.println(agent);
 				
 			}
 		}
