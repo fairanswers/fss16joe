@@ -111,29 +111,33 @@ public class Agent {
 	// Zero degrees is East
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed in absolute, positive degrees
-		double exploreDir = unexploredDir();// Absolute deg
+		if(getUnExploredWeight() > .001){
+			tmpDir = unexploredDir();// Absolute deg
+		}
 		//tmpDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();  //This isn't right.
-		//tmpDir = exploreDir;
 //		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 		if (model.getHere() == excitedState) {
 			//return tmpDir;
+			excitedState.setVisits(excitedState.getVisits()+1);
 		} else {  // Try something new.
 			model.tick(tick);
 			//If we're at the corner, get excited.
 			if(closeToBoredCorner()){
 				model.setHere(excitedState);
+				excitedState.setVisits(excitedState.getVisits()+1);
 			}
 			if (model.getHere() == boredState) {
 				// Go the other way
 				tmpDir = decideWhileBored(tmpDir);
+				boredState.setVisits(boredState.getVisits()+1);
 //				double boredDir = subtractAngles(boredDirection, this.dir) ;
 //				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
 			}
 
 			if (model.getHere() == lazyState) {
 				tmpDir = decideWhileBored(tmpDir);
-				double boredDir = findLazyDir(boredDirection);
-				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
+				tmpDir = findLazyDir(tmpDir);
+				lazyState.setVisits(lazyState.getVisits()+1);
 			}
 
 			// Mostly go forward
@@ -173,26 +177,30 @@ public double decideWhileBored(double tmpDir) {
 	return tmpBoredDir;
 }
 
-	private double findLazyDir(double boredDir) {
-		double left = findFriction(getAbsoluteDegrees(-45 + boredDir), speed);
-		double right = findFriction(getAbsoluteDegrees(45 + boredDir), speed);
+	// Return absolute direction
+	public double findLazyDir(double boredDir) {
+		double ldir = getAbsoluteDegrees(45 + boredDir);
+		double left = findFriction(ldir , speed);
+		double rdir = getAbsoluteDegrees(-45 + boredDir);
+		double right = findFriction(rdir, speed);
 		double center = findFriction(boredDir, speed);
 		if(left < right && left < center){
-			return left;
+			return ldir;
 		}else if(right<left && right < center){
-			return right;
+			return rdir;
 		}else{
-			return center;
+			return boredDir;
 		}
 	}
 
-	private double findFriction(double boredDir, double speed2) {
+	private double findFriction(double dir, double speed2) {
 		double xTravel = getXTravel(dir, speed);
 		double yTravel = getYTravel(dir, speed);
 		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			return 100;
 		}
-		return map.getTerrain().getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
+		double f= ter.getFriction(loc.getX()+xTravel, loc.getY()+yTravel);
+		return f;
 	}
 
 	// Returns positive or negative of difference.
@@ -202,12 +210,15 @@ public double decideWhileBored(double tmpDir) {
 		return a;
 	}
 
-	private double getAbsoluteDegrees(double a) {
+	public double getAbsoluteDegrees(double a) {
 		a = ((a + 180) % 360) - 180;
 		if (a > 180)
 			a = a - 360;
 		if (a < -180)
 			a = a + 360;
+		if(a < 0){
+			a=a+360;
+		}
 		return a;
 	}
 	
@@ -355,7 +366,7 @@ public double decideWhileBored(double tmpDir) {
 	}
 
 	private void checkState(int found) {
-		if (found > 0) {
+		if (!model.getStates().equals(excitedState) && found > 0) {
 			boredCounter = 0;
 			boredCorner = null;
 			model.setHere(excitedState);
@@ -412,7 +423,11 @@ public double decideWhileBored(double tmpDir) {
 	@Override
 	public String toString() {
 		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + Map.numFormat.format(dir) + ", speed=" + speed + ", see=" + see
-				+ ", dirWiggle=" + Map.numFormat.format(dirWiggle) + ", chanceFwd=" + Map.numFormat.format(chanceFwd) + ", tick=" + tick + ", ter=" + map.end + ter
+				+ ", dirWiggle=" + Map.numFormat.format(dirWiggle) + ", chanceFwd=" + Map.numFormat.format(chanceFwd) + ", tick=" + tick + ","
+						+ " excitedCount= "+excitedState.getVisits()
+						+ " boredCount= "+boredState.getVisits()
+						+ " lazyCount= "+lazyState.getVisits()
+						+ " ter=" + map.end + ter
 				+ map.end + "]";
 	}
 

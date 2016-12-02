@@ -36,22 +36,21 @@ public class AgentTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void testDecideDir() {
-		agent.setLoc(10, 10);
-		agent.setDir(10);
-		agent.setUnExploredWeight(.3);
-		agent.getTer().setTerrain(0, 0, Terrain.GRASS);
-		agent.getTer().setTerrain(1, 0, Terrain.GRASS);
-		agent.getTer().setTerrain(2, 0, Terrain.GRASS);
-		double dir = agent.decideDir();
-		assertTrue(dir - 98 < 2);
-		agent.getTer().setTerrain(3, 4, Terrain.GRASS);
-		agent.getTer().setTerrain(4, 4, Terrain.GRASS);
-		agent.getTer().setTerrain(5, 4, Terrain.GRASS);
-		dir = agent.decideDir();
-		assertTrue(dir - 98.76 < .1);
-	}
+//	@Test
+//	public void testDecideDir() {
+//		agent.setLoc(10, 10);
+//		agent.setDir(10);
+//		agent.getTer().setTerrain(0, 0, Terrain.GRASS);
+//		agent.getTer().setTerrain(1, 0, Terrain.GRASS);
+//		agent.getTer().setTerrain(2, 0, Terrain.GRASS);
+//		double dir = agent.decideDir();
+//		assertTrue(Math.abs(270-dir) < 2);
+//		agent.getTer().setTerrain(3, 4, Terrain.GRASS);
+//		agent.getTer().setTerrain(4, 4, Terrain.GRASS);
+//		agent.getTer().setTerrain(5, 4, Terrain.GRASS);
+//		dir = agent.decideDir();
+//		assertTrue(dir - 98.76 < .1);
+//	}
 
 	@Test
 	public void testExploredWeight() {
@@ -103,12 +102,11 @@ public class AgentTest {
 		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
 		//agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //21
-		agent = new Agent("a3", 1, 1, 20, .9, 1.1, map); //
-		
+		//agent = new Agent("a3", 1, 1, 20, 1, 1.1, map); //32.79
+		agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //
+		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
-		
-		//for (int i = 0; i < 100*multiplier; i++) {
 		for (int i = 0; i < multiplier * multiplier; i++) {
 			map.tick();
 			//System.out.println(map);
@@ -123,6 +121,48 @@ public class AgentTest {
 		//System.out.println(map);
 	}
 
+	@Test
+	public void testGetLazydirEast() {
+		int multiplier = 100;
+		map = new Map(multiplier, multiplier);
+		map.setTerrain(new Terrain(map, Terrain.PAVED) );
+		int x=5;
+		int y=5;
+		
+		// Pointing East - 0 degrees
+		agent.setLoc(5.5,5.5);
+		agent.setDir(0);
+		agent.getTer().setTerrain(x+1, y-1, Terrain.GRASS);
+		agent.getTer().setTerrain(x+1,y+1, Terrain.SLOPE);
+		assertTrue(agent.findLazyDir(0) < .01);
+		agent.getTer().setTerrain(x+1,y, Terrain.CLIFF);
+		assertTrue(45 - Math.abs(agent.findLazyDir(0) ) < .01);
+		agent.getTer().setTerrain(x+1,y+1, Terrain.CLIFF);
+		assertTrue(315 - Math.abs(agent.findLazyDir(0) ) < .01);
+
+	}
+	
+	@Test
+	public void testGetLazyDirSW(){
+		int multiplier = 100;
+		map = new Map(multiplier, multiplier);
+		map.setTerrain(new Terrain(map, Terrain.PAVED) );
+		int x=5;
+		int y=5;
+		
+		// Pointing East - 0 degrees
+		agent.setLoc(5.5,5.5);
+		agent.setDir(0);
+		agent.getTer().setTerrain(x-1, y  , Terrain.GRASS); //Left
+		agent.getTer().setTerrain(x-1, y-1, Terrain.SLOPE);  //SW
+		agent.getTer().setTerrain(x,   y-1, Terrain.SLOPE);  //Bottom
+		assertTrue(180 - Math.abs(agent.findLazyDir(225) ) < .01);
+		agent.getTer().setTerrain(x-1,y, Terrain.CLIFF);	//Left
+		assertTrue(225 - Math.abs(agent.findLazyDir(225) ) < .01);
+		agent.getTer().setTerrain(x-1,y-1, Terrain.CLIFF);
+		assertTrue(315 - Math.abs(agent.findLazyDir(270) ) < .01);
+	}
+	
 	@Test
 	public void testBoredMap() {
 		int multiplier = 100;
@@ -176,7 +216,7 @@ public class AgentTest {
 	public void testDegreesFromSlope() {
 		double tmpDir = 0;
 		double north = agent.getDegreesFromSlope(0, 1);
-		assertTrue( agent.subtractAngles(tmpDir, north) < 1.0);
+		assertTrue( agent.subtractAngles(tmpDir, north) < 1.0 || 360-agent.subtractAngles(tmpDir, north) < 1.0);
 		double south = agent.getDegreesFromSlope(0, -1);
 		assertTrue( Math.abs(180-south) < 1.0);
 		double east  = agent.getDegreesFromSlope(100, 0);
@@ -310,8 +350,8 @@ public class AgentTest {
 	@Test
 	public void testSubtractAngles() {
 		assertTrue(agent.subtractAngles(10, 5) == 5);
-		assertTrue(agent.subtractAngles(5, 10) == -5);
-		assertTrue(agent.subtractAngles(350, 10) == -20);
+		assertTrue(agent.subtractAngles(5, 10) == 355);
+		assertTrue(agent.subtractAngles(350, 10) == 340);
 		assertTrue(agent.subtractAngles(10, 350) == 20);
 
 	}
@@ -418,6 +458,18 @@ public class AgentTest {
 		System.out.println(map);
 		System.out.println(agent);
 		assertEquals("Checking for agent at 0x1", Terrain.AGENT, map.getViewAt(0, 1));
+	}
+	
+	@Test
+	public void testGetAbsoluteDegrees(){
+		assertTrue(111 - Math.abs(agent.getAbsoluteDegrees(111) ) < .01);
+		assertTrue(249 - Math.abs(agent.getAbsoluteDegrees(-111) ) < .01);
+		assertTrue(359 - Math.abs(agent.getAbsoluteDegrees(-1) ) < .01);
+		assertTrue(178 - Math.abs(agent.getAbsoluteDegrees(-182) ) < .01);
+		assertTrue(182 - Math.abs(agent.getAbsoluteDegrees(182) ) < .01);
+		assertTrue(183 - Math.abs(agent.getAbsoluteDegrees(-177) ) < .01);
+		assertTrue(177 - Math.abs(agent.getAbsoluteDegrees(177) ) < .01);
+		
 	}
 
 	@Test 
