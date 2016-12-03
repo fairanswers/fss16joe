@@ -157,9 +157,7 @@ public boolean closeToBoredCorner() {
 	double closeX = map.getLen()*.05;
 	double closeY = map.getWid()*.05;
 	if(boredCorner == null || loc == null){
-		System.out.println("Something Null"+this.toString());
-
-		System.out.println("Something Null"+this.toString());
+		System.out.println("Something Null in closeToBoredCorner"+this.toString());
 	}
 	double xdiff = Math.abs(boredCorner.getX() - loc.getX());
 	double ydiff = Math.abs(boredCorner.getY() - loc.getY());
