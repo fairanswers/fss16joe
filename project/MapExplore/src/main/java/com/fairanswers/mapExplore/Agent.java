@@ -114,26 +114,27 @@ public class Agent {
 		double tmpDir = this.dir;// Where we're currently headed in absolute, positive degrees
 		if(getUnExploredWeight() > .001){
 			tmpDir = unexploredDir();// Absolute deg
+		}else{
+			setComplete(true);
 		}
 		//tmpDir = subtractAngles(exploreDir, this.dir) * getUnExploredWeight();  //This isn't right.
 //		tmpDir = getAbsoluteDegrees(tmpDir + exploreDir);
 		if (model.getHere() == excitedState) {
 			//return tmpDir;
 			excitedState.setVisits(excitedState.getVisits()+1);
+			//resetBored();
 		} else {  // Try something new.
 			model.tick(tick);
 			//If we're at the corner, get excited.
 			if(closeToBoredCorner()){
 				model.setHere(excitedState);
 				excitedState.setVisits(excitedState.getVisits()+1);
-				boredCounter = 0;
+				resetBored();
 			}
 			if (model.getHere() == boredState) {
 				// Go the other way
 				tmpDir = decideWhileBored(tmpDir);
 				boredState.setVisits(boredState.getVisits()+1);
-//				double boredDir = subtractAngles(boredDirection, this.dir) ;
-//				tmpDir = getAbsoluteDegrees(tmpDir + boredDir);
 			}
 
 			if (model.getHere() == lazyState) {
@@ -153,9 +154,14 @@ public class Agent {
 		return tmpDir;
 	}
 
+private void resetBored() {
+	boredCounter = 0;
+	boredCorner = null;
+}
+
 public boolean closeToBoredCorner() {
-	double closeX = map.getLen()*.05;
-	double closeY = map.getWid()*.05;
+	double closeX = ter.getWid()*.05;
+	double closeY = ter.getLen()*.05;
 	if(boredCorner == null || loc == null){
 		System.out.println("Something Null in closeToBoredCorner"+this.toString());
 	}
@@ -304,6 +310,7 @@ public double decideWhileBored(double tmpDir) {
 		t.add(new Trans(boredState, new Maybe(LAZY, lazyState, laziness)));
 		t.add(new Trans(lazyState, new Maybe(BORED, boredState, laziness)));
 		model = new Model(t);
+		model.setHere(excitedState);
 	}
 
 	public void move(double dir, double speed) {
@@ -375,8 +382,7 @@ public double decideWhileBored(double tmpDir) {
 
 	private void checkState(int found) {
 		if (model.getHere().equals(excitedState) && found > 0) {
-			boredCounter = 0;
-			boredCorner = null;
+			resetBored();
 			model.setHere(excitedState);
 		} else {
 			boredCounter++;

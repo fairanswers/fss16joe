@@ -103,11 +103,14 @@ public class AgentTest {
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
 		//agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //21
 		//agent = new Agent("a3", 1, 1, 20, 1, 1.1, map); //32.79
-		agent = new Agent("a3", 1, 1, 90, .1, .9, map); //
+		agent = new Agent("a3", 1, 1, 90, .9, .9, map); //
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
 		for (int i = 0; i < multiplier * multiplier; i++) {
+			if(agent.isComplete()){
+				break;
+			}
 			map.tick();
 			//System.out.println(map);
 			if(map.getTick() % 1000== 0 ){
@@ -134,7 +137,7 @@ public class AgentTest {
 		Model.setRandomSeed(1L);
 		for (int i = 0; i < 10000; i++) {
 			if(map.isComplete()){
-				return;
+				break;
 			}
 			map.tick();
 			System.out.println(agent);

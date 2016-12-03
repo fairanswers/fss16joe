@@ -61,7 +61,7 @@ public class Runner extends AbstractAlgorithmRunner {
 		Runner run = new Runner();
 		for(int i=0; i < ITERATIONS; i++){
 			System.out.println("Starting iteration"+i+" pop="+ POPULATION+ " evals=" +EVALS);
-			run.nsgii();
+			run.nsgii(); // 5 minutes with 1/50/1000
 			//run.de();  // 5 minutes with 1/50/1000
 			
 		}

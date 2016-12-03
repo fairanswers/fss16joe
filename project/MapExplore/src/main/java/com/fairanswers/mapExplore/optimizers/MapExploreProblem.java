@@ -15,7 +15,10 @@ import com.fairanswers.mapExplore.fsm.Model;
 
 public class MapExploreProblem extends AbstractDoubleProblem{
 
-	public String name;
+	public static String name="nsgii";
+	public MapExploreProblem() {
+		this(name);
+	}
 	public MapExploreProblem(String name) {
 		super();
 		this.name=name;
