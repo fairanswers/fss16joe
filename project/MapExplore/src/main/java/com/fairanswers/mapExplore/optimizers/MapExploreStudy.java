@@ -64,7 +64,7 @@ public class MapExploreStudy {
     String experimentBaseDirectory = "MapExploreStudy" ;
     String referenceFrontDirectory = "MapExploreStudyFronts" ;
 
-    List<Problem<DoubleSolution>> problemList = Arrays.<Problem<DoubleSolution>>asList(new MapExploreProblem(), new MapExploreProblem()) ;
+    List<Problem<DoubleSolution>> problemList = Arrays.<Problem<DoubleSolution>>asList(new MapExploreProblem("MapExploreStudy"), new MapExploreProblem("MapExploreStudy")) ;
 
     List<TaggedAlgorithm<List<DoubleSolution>>> algorithmList = configureAlgorithmList(problemList, INDEPENDENT_RUNS) ;
 

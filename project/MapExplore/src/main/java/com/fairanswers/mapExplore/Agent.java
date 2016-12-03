@@ -65,6 +65,7 @@ public class Agent {
 		this.dirWiggle = dirWiggle;
 		this.chanceFwd = chanceFwd;
 		this.laziness = laziness;
+		createModel();
 	}
 
 	public Agent(String name, double x2, double y2, double speed, double dir, double see, double dirWiggle,
@@ -125,6 +126,7 @@ public class Agent {
 			if(closeToBoredCorner()){
 				model.setHere(excitedState);
 				excitedState.setVisits(excitedState.getVisits()+1);
+				boredCounter = 0;
 			}
 			if (model.getHere() == boredState) {
 				// Go the other way
@@ -299,14 +301,22 @@ public double decideWhileBored(double tmpDir) {
 		lazyState = new State(LAZY, false);
 		doneState = new State(DONE, false);
 		ArrayList<Trans> t = new ArrayList<Trans>();
-		t.add(new Trans(excitedState, new Always(EXCITED, excitedState)));
+		//t.add(new Trans(excitedState, new Always(EXCITED, excitedState)));
 		//t.add(new Trans(boredState, new Always(EXCITED, excitedState)));
 		t.add(new Trans(boredState, new Maybe(LAZY, lazyState, laziness)));
-		t.add(new Trans(lazyState, new Maybe(BORED, excitedState, laziness)));
+		t.add(new Trans(lazyState, new Maybe(BORED, boredState, laziness)));
 		model = new Model(t);
 	}
 
 	public void move(double dir, double speed) {
+		move(dir, speed, 100);
+	}
+	
+	public void move(double dir, double speed, int tries) {
+		if(tries<=0){
+			throw new Error("Could not exit loc "+loc+" too many tries");
+		}
+		tries--;
 		double xTravel = getXTravel(dir, speed);
 		double yTravel = getYTravel(dir, speed);
 		if (!map.isValid(loc.getX() + xTravel, loc.getY() + yTravel)) {
@@ -315,7 +325,7 @@ public double decideWhileBored(double tmpDir) {
 		}
 		if (map.isCliff(loc.getX() + xTravel, loc.getY() + yTravel)) {
 			setDir(turnRandom(90));
-			move(getDir(), speed);
+			move(getDir(), speed, tries);
 			return;
 		}
 		setDir(dir);
@@ -366,7 +376,7 @@ public double decideWhileBored(double tmpDir) {
 	}
 
 	private void checkState(int found) {
-		if (!model.getStates().equals(excitedState) && found > 0) {
+		if (model.getHere().equals(excitedState) && found > 0) {
 			boredCounter = 0;
 			boredCorner = null;
 			model.setHere(excitedState);
@@ -375,6 +385,9 @@ public double decideWhileBored(double tmpDir) {
 			if (boredCounter == boredLimit) {
 				boredCorner = pickCorner();
 				model.setHere(boredState);
+			}
+			if(boredCounter >= boredLimit * 2){
+				setComplete(true);
 			}
 		}
 
@@ -424,9 +437,10 @@ public double decideWhileBored(double tmpDir) {
 	public String toString() {
 		return "Agent [name=" + name + ", loc=" + loc + ", dir=" + Map.numFormat.format(dir) + ", speed=" + speed + ", see=" + see
 				+ ", dirWiggle=" + Map.numFormat.format(dirWiggle) + ", chanceFwd=" + Map.numFormat.format(chanceFwd) + ", tick=" + tick + ","
-						+ " excitedCount= "+excitedState.getVisits()
-						+ " boredCount= "+boredState.getVisits()
-						+ " lazyCount= "+lazyState.getVisits()
+						+ " excitedVisits= "+excitedState.getVisits()
+						+ " boredVisits= "+boredState.getVisits()
+						+ " lazyVisits= "+lazyState.getVisits()
+						+ " current boredCount= "+boredCounter
 						+ " ter=" + map.end + ter
 				+ map.end + "]";
 	}

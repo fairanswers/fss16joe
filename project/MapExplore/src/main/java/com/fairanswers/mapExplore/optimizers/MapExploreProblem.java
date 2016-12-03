@@ -15,8 +15,10 @@ import com.fairanswers.mapExplore.fsm.Model;
 
 public class MapExploreProblem extends AbstractDoubleProblem{
 
-	public MapExploreProblem() {
+	public String name;
+	public MapExploreProblem(String name) {
 		super();
+		this.name=name;
 		// Variables x, y, dirWiggle, chanceFwd, ticks, Hevily populated map , seed
 	    setNumberOfVariables(5);
 	    setNumberOfObjectives(2);
@@ -51,7 +53,9 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		map.getAgents().add(agent);
 		for (int i = 0; i < multiplier*multiplier; i++) {
 			//System.out.println(i);
-			map.tick();
+			if(!agent.isComplete()){
+				map.tick();
+			}
 			//Check for completes
 			if(agent.getTer().getCoverage() < -99.9 ){ //Check for finished
 				finish(solution, agent);
@@ -66,17 +70,18 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		solution.setObjective(0, cov);
 		double energy =agent.getEnergy()/1000;
 		solution.setObjective(1, energy);
-		System.out.println("Finished with unknown percent = "+cov
-				+" Energy = "+Map.numFormat.format(energy) 
+		System.out.println(name+"Finished with unknown percent = "+Map.numFormat.format(cov)
+				+" Energy = "+Map.numFormat.format(energy)
 				+" DirWiggle="+Map.numFormat.format(agent.getDirWiggle())
 				+" ChanceFwd="+Map.numFormat.format(agent.getChanceFwd())
 				+" Laziness="+Map.numFormat.format(agent.getLaziness() )
+				+" terminateEarly="+agent.isComplete()
 				+" at "+new Date() );
 	}
 
-	public static MapExploreProblem create(int seed) {
+	public static MapExploreProblem create(int seed, String name) {
 		Model.setRandomSeed(seed);
-		return new MapExploreProblem();
+		return new MapExploreProblem(name);
 	}
 
 	public static String generateParetofront(List<DoubleSolution> init, List<DoubleSolution> pop) {

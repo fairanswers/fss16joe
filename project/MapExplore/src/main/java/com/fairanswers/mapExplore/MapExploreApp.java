@@ -78,7 +78,11 @@ public class MapExploreApp {
 			ticks = Integer.parseInt(line.getOptionValue(TICKS));
 		}
 		for(int t=0; t<ticks; t++){
-			map.tick();
+			if(!map.isComplete()){
+				map.tick();
+			}else{
+				return;
+			}
 		}
 		System.out.println("END");
 	}

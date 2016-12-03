@@ -43,7 +43,8 @@ public class DEProblem implements Runnable{
 	    String variant = "rand/1/bin";
 	    int seed = Model.getRandomIntRange(0, 10000);
 	    		
-	    problem = MapExploreProblem.create(seed);
+	    String name="DE.cr="+cr+"_f="+f+"_variant="+variant+"_pop="+population+"_evals="+evals+"_seed"+seed;
+	    problem = MapExploreProblem.create(seed, name);
 	    	    int numberOfCores =8;
 
 	    if (numberOfCores == 1) {
@@ -72,7 +73,7 @@ public class DEProblem implements Runnable{
 
 
 	    ArrayList<String> results = new ArrayList<>();
-		results.add("CoverageDE.cr="+cr+"_f="+f+"_variant="+variant+"_pop="+population+"_evals="+evals+"_seed"+seed );
+		results.add(name);
 	    for(int i=0; i< runs; i++){
 		    List<DoubleSolution> initalPopulation = new ArrayList<>();
 			for(int j=0; j<population; j++){
@@ -95,7 +96,7 @@ public class DEProblem implements Runnable{
 	    }
 	    evaluator.shutdown();
 	    try {
-			runner.report("CoverageDE", startTime, results);
+			runner.report(name, startTime, results);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

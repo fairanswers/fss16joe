@@ -81,13 +81,22 @@ public class Map {
 	public String getViewAt(double x, double y) {
 		return getViewAt((int)x, (int)y);
 	}
+	
 	//Represents one time tick
 	public int tick(){
 		tick++;
 		//Shuffle the agents and let them move
 		Collections.shuffle(agents, Model.getRandomGenerator() );
+		boolean done = true;
 		for(Agent a:agents){
-			a.tick(tick);
+			if(!a.isComplete()){
+				done =false;
+				a.tick(tick);
+			}
+		}
+		if(done){
+			System.out.println("Earliy termination at tick "+tick);
+			complete = true;
 		}
 		return this.tick;
 	}

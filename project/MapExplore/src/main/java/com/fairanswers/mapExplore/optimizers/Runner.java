@@ -55,14 +55,14 @@ public class Runner extends AbstractAlgorithmRunner {
 		if(true){
 			ITERATIONS=1;
 			POPULATION=50; //Must be even for DE
-			EVALS=100;
-			THREADS=2;
+			EVALS=1000;
+			THREADS=1;
 		}
 		Runner run = new Runner();
 		for(int i=0; i < ITERATIONS; i++){
 			System.out.println("Starting iteration"+i+" pop="+ POPULATION+ " evals=" +EVALS);
 			run.nsgii();
-			//run.de();
+			//run.de();  // 5 minutes with 1/50/1000
 			
 		}
 		System.out.println("* * * End maintime ="+new Date().getTime() +" elaspsed mainTime ="+(new Date().getTime() - mainStart )/1000);
@@ -125,7 +125,7 @@ public class Runner extends AbstractAlgorithmRunner {
 		Algorithm<List<DoubleSolution>> algorithm;
 		String referenceParetoFront = "";
 		String problemName = "com.fairanswers.mapExplore.optimizers.MapExploreProblem";
-		problem = new MapExploreProblem();
+		problem = new MapExploreProblem("random");
 		algorithm = new RandomSearchBuilder<DoubleSolution>(problem).setMaxEvaluations(10).build();
 
 		AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();

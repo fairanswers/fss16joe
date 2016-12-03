@@ -68,7 +68,8 @@ public class NSGAIIStudy {
 //		}
 		String experimentBaseDirectory = "NSGAStudy";
 
-		List<Problem<DoubleSolution>> problemList = Arrays.<Problem<DoubleSolution>>asList(new MapExploreProblem());
+		String name = "NSGAIIStudy";
+		List<Problem<DoubleSolution>> problemList = Arrays.<Problem<DoubleSolution>>asList(new MapExploreProblem(name ));
 
 		List<TaggedAlgorithm<List<DoubleSolution>>> algorithmList = configureAlgorithmList(problemList,
 				INDEPENDENT_RUNS);

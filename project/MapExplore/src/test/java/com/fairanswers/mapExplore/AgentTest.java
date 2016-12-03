@@ -103,7 +103,7 @@ public class AgentTest {
 		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
 		//agent = new Agent("a3", 1, 1, 1, 1, 1.1, map); //21
 		//agent = new Agent("a3", 1, 1, 20, 1, 1.1, map); //32.79
-		agent = new Agent("a3", 1, 1, 20, .1, 1.1, map); //
+		agent = new Agent("a3", 1, 1, 90, .1, .9, map); //
 		agent.setUnExploredWeight(1);
 		map.getAgents().add(agent);
 		Model.setRandomSeed(1L);
@@ -114,6 +114,34 @@ public class AgentTest {
 				//System.out.println(map.getTick());
 				//agent.setUnExploredWeight(Model.getRandom() * .5);
 				System.out.println(agent);
+				
+			}
+		}
+		System.out.println(agent);
+		//System.out.println(map);
+	}
+
+	@Test
+	public void testSmallMap() {
+		map = new Map(100, 20);
+		map.setTerrain(new Terrain(map, 1.0) );
+		agent = new Agent("SmMap", 1, 1, 90, .1, 1.1, map); // Early terminiation at 494		21%
+		//agent = new Agent("SmMap", 1, 1, 90, .1, .1, map); // Early terminiation at 1601		74%
+		//agent = new Agent("SmMap", 1, 1, 90, .9, .1, map); // Early terminiation at 1239		65%
+		//agent = new Agent("SmMap", 1, 1, 10, .9, .1, map); // Early terminiation at 1227		64%
+		agent.setUnExploredWeight(1);
+		map.getAgents().add(agent);
+		Model.setRandomSeed(1L);
+		for (int i = 0; i < 10000; i++) {
+			if(map.isComplete()){
+				return;
+			}
+			map.tick();
+			System.out.println(agent);
+			if(map.getTick() % 1000== 0 ){
+				//System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				System.out.println(agent.getTer());
 				
 			}
 		}
@@ -180,6 +208,38 @@ public class AgentTest {
 			map.tick();
 			agent.getModel().setHere(agent.getBoredState());
 			agent.setBoredCorner(new Location(99,99));
+			//System.out.println(agent);
+			if(map.getTick() % 100== 0 ){
+				//System.out.println(map.getTick());
+				//agent.setUnExploredWeight(Model.getRandom() * .5);
+				System.out.println(agent);
+				
+			}
+		}
+		System.out.println(agent);
+		//System.out.println(map);
+	}
+	
+	@Test
+	public void testCheckState() {
+		int multiplier = 100;
+		map = new Map(multiplier, multiplier);
+		map.setTerrain(new Terrain(map, Terrain.PAVED) );
+		//agent = new Agent("a3", 1, 1, 30, .9, map); //70%
+		//agent = new Agent("a3", 1, 1, 50, .9, map); //77.3
+		agent = new Agent("a3", 1, 1, 1, 1, 1, map); //82.2
+		
+		map.getAgents().add(agent);
+		Model.setRandomSeed(1L);
+		
+		//for (int i = 0; i < 100*multiplier; i++) {
+		agent.getModel().setHere(agent.getBoredState());
+		agent.setBoredCorner(new Location(99,99));
+		for (int i = 0; i < multiplier * multiplier; i++) {
+			if(agent.isComplete()){
+				break;
+			}
+			map.tick();
 			//System.out.println(agent);
 			if(map.getTick() % 100== 0 ){
 				//System.out.println(map.getTick());
