@@ -112,7 +112,7 @@ public class Agent {
 	// Zero degrees is East
 	public double decideDir() {
 		double tmpDir = this.dir;// Where we're currently headed in absolute, positive degrees
-		if(getUnExploredWeight() > .001){
+		if(getTer().getCoverage() < 99.9){
 			tmpDir = unexploredDir();// Absolute deg
 		}else{
 			setComplete(true);
@@ -143,13 +143,13 @@ public class Agent {
 				lazyState.setVisits(lazyState.getVisits()+1);
 			}
 
-			// Mostly go forward
-			if (Model.getRandom() < chanceFwd) {
-				Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
-				tmpDir += wiggle;
-			} else {
-				tmpDir= turnRandom(90);
-			}
+		}
+		// Mostly go forward
+		if (Model.getRandom() < chanceFwd) {
+			Double wiggle = Model.getRandomDouble(0 - dirWiggle, dirWiggle);
+			tmpDir += wiggle;
+		} else {
+			tmpDir= turnRandom(90);
 		}
 		return tmpDir;
 	}
