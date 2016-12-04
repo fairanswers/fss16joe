@@ -73,12 +73,12 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		solution.setObjective(0, cov);
 		double energy =agent.getEnergy()/1000;
 		solution.setObjective(1, energy);
-		System.out.println(name+"Finished with unknown percent = "+Map.numFormat.format(cov)
+		System.out.println(name+"..Finished with unknown percent = "+Map.numFormat.format(cov)
 				+" Energy = "+Map.numFormat.format(energy)
-				+" DirWiggle="+Map.numFormat.format(agent.getDirWiggle())
-				+" ChanceFwd="+Map.numFormat.format(agent.getChanceFwd())
-				+" Laziness="+Map.numFormat.format(agent.getLaziness() )
-				+" terminateEarly="+agent.isComplete()
+				+" DirWiggle = "+Map.numFormat.format(agent.getDirWiggle())
+				+" ChanceFwd = "+Map.numFormat.format(agent.getChanceFwd())
+				+" Laziness = "+Map.numFormat.format(agent.getLaziness() )
+				+" terminateEarly = "+agent.isComplete()
 				+" at "+new Date() );
 	}
 
