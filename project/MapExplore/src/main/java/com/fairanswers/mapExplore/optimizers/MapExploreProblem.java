@@ -59,7 +59,7 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 			if(!agent.isComplete()){
 				try{
 				map.tick();
-				}catch(Exception ex){
+				}catch(Error ex){
 					//Death.  Don't tell me about death.
 					agent.setComplete(true);
 					map.setComplete(true);

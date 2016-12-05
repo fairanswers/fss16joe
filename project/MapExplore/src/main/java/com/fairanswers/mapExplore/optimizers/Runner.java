@@ -55,7 +55,7 @@ public class Runner extends AbstractAlgorithmRunner {
 		if(true){
 			ITERATIONS=1;
 			POPULATION=50; //Must be even for DE
-			EVALS=250;
+			EVALS=1000;
 			//EVALS=100;
 			THREADS=1;
 		}
