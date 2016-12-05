@@ -1,6 +1,6 @@
 # ASE16 Joe's Final Project
 # MapExplore
-This project will use Particle Swarm Optimization to cover a map.  
+This project will use optimizations to find the best variables to cover a map.  
 
 The decisions will include
 * Likelihood of taking a random turn.
@@ -11,26 +11,11 @@ Objectives:
 * Percent map unknown (minimize)
 * Energy (minimize)
 
-Interesting Scenarios
-* Known POI location vs. unknown POI location.  Bomb dogs and MIA search and rescue
-* POI that move, so older data is less reliable.
-* Solar charging - Rain, sunshine.  Affects charge rate, wet terrain slows speed.
 
-Not on agenda
-* Agents communicate recent findings.
-* Defenders take out agents (loss of data)
-* POI are mobile (old data is less reliable)
-* Agents have a set rate of failure.
+[The final paper is here](http://tiny.cc/ase16JoeMapExplorePaper)
 
-
-FSM in java
-Adapted from python code.  Starts in the Model class.
-
-Example PSO
-http://unbox.org/open/trunk/472/14/spring/doc/games.md
-
-Jmetal
-http://jmetal.github.io/jMetal/
+Below is a log of progress as we went. It is more for my interest rather than yours.
+-Joe
 
 
 #Phase 1 - Make a map and an agent.  Get them to move.
@@ -539,67 +524,3 @@ T0123456789012345678901234567890123456789012345678901234567890123456789012345678
 T0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789T 
 
 ```
-#Future
-
-
-?Increate likelyhood of walls by doing a grid like on unbox, where each value increases the likelyhood of walls.  YOu can do vertical, horizontal, diagonal.
-
-?Add water, which can be flowing.  Look at http://unbox.org/open/trunk/472/14/spring/doc/games.md 
-
-? Point to point navigation?
-
-?Speed variable
-
-?Bomb dog- don't step on the bombs
-
-?MIA Rescue - Find known number MIAs to end simulation early.  Using maps of X by Y and ticks of X*Y, I've only been able to get completion in the mid 80s.
-
-?Active Shoter - must stay behind hill.  Hear shots to estimate location.  Figure out how to stay behind cover.
-
-#ASE Presentation Draft
-
-Tell and show - 
- Tell in Title
- Show in graphic (Picture or graph)
-
-Cropping is good.
-Image on Right Side, Text on Left
-Make picture whole slide.  Put text on semi-transparent
-Text Upper Left, Image lower right, no background image.
-Use images with a different style.
-No clip art.
-
-Image Ideas
-Indiana Jones
-Pirates
-X marks the spot
-Robots from the future
-Lost
-Asking for directions
-Bored
-Happy 
-Bored to death
-Wandering
-Agents (Secrect)
-
-Presentation Outline
-When I first came to NC State I learned about and drone made from a big model airplane.  It takes off, finds things within an area, and lands, all by itself. That stuck with me, because it's the kind of problem that you can think about on your own, but you can also get luck at, so having experience may not always be an advantage.
-
-My project is to make a map and a agent to drive around on it. It's a land-based dron with different characteristics (lazy, bored, patient) that we can set, then let it run around.  We take the same agent and see how much it explores.
-
-Maps
-[Show diagram of map and key for terrains]
-The maps are 100 units by 100 units, and each drone has 100 * 100 = 10,000 moves to explore it.  Each map has terrain that has different friction amounts, paved is easy to travel, grass is harder, slopes are harder, and cliffs are impossible.  If you hit a cliff (or an edge) turn right or left 90 degress and start again.
-
-Agents
-[Show diagram of early version terrain vs later version]
-The agest start a 'run' of experiments at a random location with the same set of variables:  Momentum, Chance Forward, Direction Wiggle, Lazyness.  He can also have states of Happy, Bored, and Lazy.
-
-Happy agents are finding new territory.  That's their goal, to explore the map, so as long as they are doing that, they are happy.  If they don't find anything for a while, they get bored and change their behavior.  They stop what they are doing and think about where they want to go.  They start with the closest 10% of the map and see if there are any unknown places there.  If so, great!  They head that way.  If not, they check the next 10%, and the next, until they check the whole map.  If there are no unknowns, the map is complete.
-
-If they find an unknown but it takes too long to get there, they die of bordem.  This is effectively early termination for an agent that just isn't doing well.
-
-Taboo Search
-
-Results
-
