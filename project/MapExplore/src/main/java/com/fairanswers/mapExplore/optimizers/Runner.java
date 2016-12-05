@@ -55,14 +55,14 @@ public class Runner extends AbstractAlgorithmRunner {
 		if(true){
 			ITERATIONS=1;
 			POPULATION=50; //Must be even for DE
-			EVALS=1000;
+			EVALS=250;
 			//EVALS=100;
 			THREADS=1;
 		}
 		Runner run = new Runner();
 		for(int i=0; i < ITERATIONS; i++){
 			System.out.println("Starting iteration"+i+" pop="+ POPULATION+ " evals=" +EVALS);
-			//run.de();  // 5 minutes with 1/50/1000
+			run.de();  // 5 minutes with 1/50/1000
 			run.nsgii(); // 5 minutes with 1/50/1000
 			
 		}

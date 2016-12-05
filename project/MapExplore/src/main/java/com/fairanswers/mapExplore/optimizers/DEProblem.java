@@ -85,9 +85,11 @@ public class DEProblem implements Runnable{
 		    AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm)
 			        .execute() ;
 			List<DoubleSolution> fpop = algorithm.getPopulation() ;
-			for(DoubleSolution s : fpop){
-				results.add(Double.toString(s.getObjective(0) ) );
-				results.add(Double.toString(s.getObjective(1) ) );
+			for(int j=0; j<fpop.size(); j++){
+				results.add(" ["+Double.toString(fpop.get(j).getObjective(0) )+", " + Double.toString(fpop.get(j).getObjective(1) )+"], " );
+			}
+			for(int j=0; j<initalPopulation.size(); j++){
+				results.add(" ["+Double.toString(initalPopulation.get(j).getObjective(0) )+", " + Double.toString(initalPopulation.get(j).getObjective(1) )+"], " );
 			}
 		    	
 		    String display = MapExploreProblem.generateParetofront(initalPopulation, fpop);

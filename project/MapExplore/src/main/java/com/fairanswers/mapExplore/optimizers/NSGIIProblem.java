@@ -82,11 +82,12 @@ public class NSGIIProblem implements Runnable{
 			System.out.println("Starting run "+i);
 			AlgorithmRunner algorithmRunner = new AlgorithmRunner.Executor(algorithm).execute();
 			List<DoubleSolution> population = algorithm.getResult();
-			//System.out.println("Init ="+initalPopulation);
-			//System.out.println("Sols ="+population);
+			for(int j=0; j<initalPopulation.size(); j++){
+				results.add(" ["+Double.toString(initalPopulation.get(j).getObjective(0) )+", " + Double.toString(initalPopulation.get(j).getObjective(1) )+"], " );
+			}
+			results.add("\n" );
 			for(int j=0; j<population.size(); j++){
-				results.add(Double.toString(population.get(j).getObjective(0) ) );
-				results.add(Double.toString(population.get(j).getObjective(1) ) );
+				results.add(" ["+Double.toString(population.get(j).getObjective(0) )+", " + Double.toString(population.get(j).getObjective(1) )+"], " );
 			}
 			String display = MapExploreProblem.generateParetofront(initalPopulation, population);
 			results.add("\nPARETO:\n"+display);

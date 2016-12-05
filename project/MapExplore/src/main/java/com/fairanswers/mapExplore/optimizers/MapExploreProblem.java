@@ -57,7 +57,15 @@ public class MapExploreProblem extends AbstractDoubleProblem{
 		for (int i = 0; i < multiplier*multiplier; i++) {
 			//System.out.println(i);
 			if(!agent.isComplete()){
+				try{
 				map.tick();
+				}catch(Exception ex){
+					//Death.  Don't tell me about death.
+					agent.setComplete(true);
+					map.setComplete(true);
+				}
+			}else{
+				break;
 			}
 			//Check for completes
 			if(agent.getTer().getCoverage() < -99.9 ){ //Check for finished
